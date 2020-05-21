@@ -1,7 +1,7 @@
 package framework3d.geometry;
 
 /*
-Questa classe rappresenta un vettore immutabile (il suo stato interno non può cambiare) a coordinate omogenee.
+Questa classe rappresenta un vettore "semi immutabile"(?)  a coordinate omogenee.
 Un vettore a coordinate omogenee (VCO) rappresenta un vettore in uno spazio di proiezione. La differenza con le coordinate cartesiane è che 
 queste ultime agiscono su spazi euclidei. Infatti un VCO può anche essere visto come una mappatura tra lo spazio 4D a quello 3D e 
 viceversa. Tutto questo è possibile grazie alla 4 coordinata del vettore che agisce sul vettore stesso "normalizzandolo".
@@ -10,7 +10,8 @@ una quarta coordinata w e abbiamo un VCO k = (w * x, w * y, w * z, w). Per l'ope
 Come si può notare un vettore in 3d dimensioni è equivalente a infiniti VCO definiti come sopra (basta prendere w diverse).
 
 Alcune proprietà dei VCO:
-- Se eseguo la sottrazione di due vettori P - Q, la quarta coordinata diventa 0, questo perché mi interessa la direzione e non 
+- Se eseguo la sottrazione di due vettori P - Q, la quarta coordinata diventa 0 (a patto che i due vettori siano nello spazio 3d. cioè
+    con quarta coordinata = 1.0), questo perché mi interessa la direzione e non 
     il punto rappresentato dalla sottrazione dei vettori.
 
 - Le traslazioni di uno spazio 3d non possono avvenire nello stesso spazio 3d, ma serve aumentare di dimensione. Ecco perché
@@ -28,6 +29,13 @@ Alcune proprietà sulle trasformazioni affini:
 
 
 Per concludere, la quarta coordinata servirà per rimappare gli oggetti dopo la proiezione, dividendo tutti i vettori per quest'ultima.
+
+Nota: nelle usuali operazioni 3D (somma tra due vettori, ecc) la quarta coordinata non interviene. Questo perché, come ho già detto,
+la quarta coordinata interviene solo durante la fase di proiezione.
+
+
+(?) Per semi immutabile intendo un vettore che può cambiare le sue coordinate solo in due casi:
+normalizzando il vettore e normalizzando il vettore rispetto alla sua quarta coordinata.
 */
 
 public class Vector4D 
@@ -61,11 +69,69 @@ public class Vector4D
     //********************* FINE COSTRUTTORI ******************************** */
 
 
+    //********************* METODO GET PER LE COORDINATE ******************** */
+    
+    //Assumo che la responsabilità per la verifica dell'indice è del chiamante.
+    public float getCoordinate(int index)
+    {  
+        return v[index];
+    }
+
+    //********************* FINE METODO GET PER LE COORDINATE ******************** */
+
+
 
     // ************************* METODI STATIC PER LA CREAZIONE DI VETTORI ******************************
 
+    public static Vector4D copy(Vector4D v)
+    {
+        return new Vector4D(v.getCoordinate(0), v.getCoordinate(1), v.getCoordinate(2), v.getCoordinate(3));
+    }
 
-    // ************************** FINE METODI STATIC PER LA CREAZIONE DI VETTORI *******************************
+
+    public static Vector4D add(Vector4D v, Vector4D w)
+    {
+        return new Vector4D(v.getCoordinate(0) + w.getCoordinate(0), 
+                            v.getCoordinate(1) + w.getCoordinate(1), 
+                            v.getCoordinate(2) + w.getCoordinate(2), 
+                            1.0f);
+    }
+
+    
+    public static Vector4D sub(Vector4D v, Vector4D w)
+    {
+        return new Vector4D(v.getCoordinate(0) - w.getCoordinate(0), 
+                            v.getCoordinate(1) - w.getCoordinate(1), 
+                            v.getCoordinate(2) - w.getCoordinate(2), 
+                            v.getCoordinate(3) - w.getCoordinate(3));
+    }
+    
+
+    public static Vector4D multiplyByScalar(Vector4D v, float scalar)
+    {
+        return new Vector4D(v.getCoordinate(0) * scalar, 
+                            v.getCoordinate(1) * scalar, 
+                            v.getCoordinate(2) * scalar, 
+                            1.0f);
+    }
 
 
+    public static float dotProduct(Vector4D v, Vector4D w)
+    {
+        return v.getCoordinate(0) * w.getCoordinate(0) +
+                v.getCoordinate(1) * w.getCoordinate(1) +
+                v.getCoordinate(2) * w.getCoordinate(2) +
+                v.getCoordinate(3) * w.getCoordinate(3);
+    }
+
+    //Da controllare correttezza.
+    public static Vector4D crossProduct(Vector4D v, Vector4D w)
+    {
+        return new Vector4D(v.getCoordinate(1) * w.getCoordinate(2) - v.getCoordinate(2) * w.getCoordinate(1),
+                        v.getCoordinate(2) * w.getCoordinate(0) - v.getCoordinate(0) * w.getCoordinate(2),
+                        v.getCoordinate(0) * w.getCoordinate(1) - v.getCoordinate(1) * w.getCoordinate(0),
+                        1.0f);
+    }
+
+    // ************************** FINE METODI STATIC PER LA CREAZIONE DI VETTORI ************************
 }
