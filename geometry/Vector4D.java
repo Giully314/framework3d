@@ -151,9 +151,9 @@ public class Vector4D
     {
         return v.getCoordinate(0) * w.getCoordinate(0) +
                 v.getCoordinate(1) * w.getCoordinate(1) +
-                v.getCoordinate(2) * w.getCoordinate(2) +
-                v.getCoordinate(3) * w.getCoordinate(3);
+                v.getCoordinate(2) * w.getCoordinate(2);
     }
+
 
     //Da controllare correttezza.
     public static Vector4D crossProduct(Vector4D v, Vector4D w)
