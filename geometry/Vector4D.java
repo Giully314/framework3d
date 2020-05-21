@@ -129,6 +129,7 @@ public class Vector4D
     }
 
     
+    //da controllare se sottrarre la 4 coordinata oppure no
     public static Vector4D sub(Vector4D v, Vector4D w)
     {
         return new Vector4D(v.getCoordinate(0) - w.getCoordinate(0), 
