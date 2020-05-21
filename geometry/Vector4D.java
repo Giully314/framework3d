@@ -80,6 +80,37 @@ public class Vector4D
     //********************* FINE METODO GET PER LE COORDINATE ******************** */
 
 
+    //********************* METODI PER LA NORMALIZZAZIONE VETTORE  ****************************/
+    public void normalize()
+    {
+        float l = length();
+
+        if (l != 0)
+        {
+            v[0] /= l;
+            v[1] /= l;
+            v[2] /= l;
+        }
+    }
+
+
+    public void normalizeByW()
+    {
+        if (v[3] != 0)
+        {
+            v[0] /= v[3];
+            v[1] /= v[3];
+            v[2] /= v[3];
+        }
+    }
+
+
+    public float length()
+    {
+        return (float)Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    }
+    //********************* FINE METODI PER LA NORMALIZZAZIONE VETTORE  ****************************/
+
 
     // ************************* METODI STATIC PER LA CREAZIONE DI VETTORI ******************************
 
@@ -132,6 +163,5 @@ public class Vector4D
                         v.getCoordinate(0) * w.getCoordinate(1) - v.getCoordinate(1) * w.getCoordinate(0),
                         1.0f);
     }
-
     // ************************** FINE METODI STATIC PER LA CREAZIONE DI VETTORI ************************
 }
