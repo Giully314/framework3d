@@ -46,12 +46,15 @@ public class Vector4D
     //******************* COSTRUTTORI ******************************** */
     public Vector4D()
     {
-        v = new float[4];
-        v[0] = 0.0f;
-        v[1] = 0.0f;
-        v[2] = 0.0f;
-        v[3] = 1.0f;
+        this(0.0f, 0.0f, 0.0f, 1.0f);
     }
+
+    public Vector4D(final float x, final float y, final float z)
+    {
+        this(x, y, z, 1.0f);
+    }
+
+
 
     public Vector4D(final float x, final float y, final float z, final float w)
     {

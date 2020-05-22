@@ -37,6 +37,8 @@ public class Matrix4x4
 
     //************************** METODI STATIC PER LA CREAZIONE DI MATRICI ******************************* */
     
+
+    //******************** TRASFORMAZIONI ********************************** */
     public static Matrix4x4 makeIdentity()
     {
         final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
@@ -123,6 +125,85 @@ public class Matrix4x4
     }
 
 
+    public static Matrix4x4 makeScaling(float x, float y, float z)
+    {
+        final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
+
+        m[0 * Matrix4x4.size + 0] = x;
+
+        m[1 * Matrix4x4.size + 1] = y;
+
+        m[2 * Matrix4x4.size + 2] = z;
+
+        m[3 * Matrix4x4.size + 3] = 1.0f;
+
+        return new Matrix4x4(m);
+    }
+
+    //******************** FINE TRASFORMAZIONI ********************************** */
+
+    //********************** PROIEZIONI **************************************** */
+
+    /* 
+    La matrice utilizzata per le proiezioni è la stessa utilizzata da opengl. Per la documentazione su come ricavare questa matrice:
+    https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/opengl-perspective-projection-matrix
+    */
+    public static Matrix4x4 makeProjection(float near, float far, float aspectRatio, float fov)
+    {
+        final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
+
+        //Per la spiegazione della divisione dell'angolo in 2, vedere articolo strech
+        float fovRad = fov * 0.5f / 180.0f * 3.1415926535f;
+
+        float top = (float)Math.tan(fovRad) * near;
+        float bottom = -top;
+
+        float right = top * aspectRatio;
+        float left = -right;
+
+        m[0 * Matrix4x4.size + 0] = 2.0f * near / (right - left);
+		m[0 * Matrix4x4.size + 2] = (right + left) / (right - left);
+		
+		m[1 * Matrix4x4.size + 1] = 2.0f * near / (top - bottom);
+		m[1 * Matrix4x4.size + 2] = (top + bottom) / (top - bottom);
+
+		m[2 * Matrix4x4.size + 2] = - (far  + near) / (far - near);
+		m[2 * Matrix4x4.size + 3] = - 2.0f * far * near / (far - near);
+
+		m[3 * Matrix4x4.size + 2] = -1.0f;
+
+        return new Matrix4x4(m);
+    }
+
+    /* 
+    Questa matrice permette di trasformare le coordinate dal NDC (normalized device coordinates) al window space.
+    x e y corrispondo all'angolo sinistro in basso. widht e height a larghezza e lunghezza della finestra.
+    far e near corrispondono ai due piani definiti per la matrice di proiezione.
+    */
+    public static Matrix4x4 makeViewport(int originX, int originY,  int near, int far, int width, int height)
+    {
+        final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
+        
+        m[0 * Matrix4x4.size + 0] = width / 2;
+        m[0 * Matrix4x4.size + 3] = originX + width / 2;
+
+        m[1 * Matrix4x4.size + 1] = height / 2;
+        m[1 * Matrix4x4.size + 3] = originY + height / 2;
+        
+        m[2 * Matrix4x4.size + 2] = (far - near) / 2;
+        m[2 * Matrix4x4.size + 3] = (far + near) / 2;
+        
+        m[3 * Matrix4x4.size + 3] = 1.0f;
+
+
+        return new Matrix4x4(m);
+    }
+
+    //********************** FINE PROIEZIONI **************************************** */
+
+    //************************************* OPERAZIONI GENERALI TRA MATRICI, MATRICI E VETTORI, MATRICI E TRIANGOLI. */
+
+    //Questa procedura corrisponde ad a * b, dove a e b sono due matrici quadrate 4 x 4.
     public static Matrix4x4 multiplication(final Matrix4x4 a, final Matrix4x4 b)
     {
         final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
@@ -139,6 +220,22 @@ public class Matrix4x4
         }
 
         return new Matrix4x4(m);
+    }
+
+
+    public static Vector4D multiplyByVector(final Matrix4x4 a, final Vector4D v)
+    {
+        final float[] w = new float[4];
+
+        for (int i = 0; i < Matrix4x4.size; ++i)
+        {
+            for (int j = 0; j < Matrix4x4.size; ++j)
+            {
+                w[i] += a.m[i * Matrix4x4.size + j] * v.getCoordinate(j);
+            }
+        }
+
+        return new Vector4D(w);
     }
 
     //************************** FINE METODI STATIC PER LA CREAZIONE DI MATRICI **************************  */
