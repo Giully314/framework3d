@@ -112,9 +112,9 @@ public class Matrix4x4
         final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
 
         m[0 * Matrix4x4.size + 0] = (float)Math.cos(angle);
-        m[0 * Matrix4x4.size + 0] = -(float)Math.sin(angle);
+        m[0 * Matrix4x4.size + 1] = -(float)Math.sin(angle);
 
-        m[1 * Matrix4x4.size + 1] = (float)Math.sin(angle);
+        m[1 * Matrix4x4.size + 0] = (float)Math.sin(angle);
         m[1 * Matrix4x4.size + 1] = (float)Math.cos(angle);
         
         m[2 * Matrix4x4.size + 2] = 1.0f;
@@ -143,7 +143,7 @@ public class Matrix4x4
     //******************** FINE TRASFORMAZIONI ********************************** */
 
     //********************** PROIEZIONI **************************************** */
-
+    //DA CONTROLLARE MATRICI PROIEZIONI
     /* 
     La matrice utilizzata per le proiezioni è la stessa utilizzata da opengl. Per la documentazione su come ricavare questa matrice:
     https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/opengl-perspective-projection-matrix
@@ -236,6 +236,16 @@ public class Matrix4x4
         }
 
         return new Vector4D(w);
+    }
+
+
+    public static Triangle multiplyByTriangle(final Matrix4x4 a, final Triangle t)
+    {
+        Vector4D v = Matrix4x4.multiplyByVector(a, t.getVertex(0));
+        Vector4D w = Matrix4x4.multiplyByVector(a, t.getVertex(1));
+        Vector4D b = Matrix4x4.multiplyByVector(a, t.getVertex(2));
+
+        return new Triangle(v, w, b);
     }
 
     //************************** FINE METODI STATIC PER LA CREAZIONE DI MATRICI **************************  */

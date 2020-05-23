@@ -43,6 +43,19 @@ public class Vector4D
     //Array che rappresenta il vettore 4d.
     private final float[] v;
 
+
+    //Metodo per debug
+    public void print()
+    {
+        System.out.print("( ");
+        for (int i = 0; i < v.length - 1; ++i)
+        {
+            System.out.print(v[i] + " , "); 
+        }
+
+        System.out.println(v[3] + " )");
+    }
+
     //******************* COSTRUTTORI ******************************** */
     public Vector4D()
     {

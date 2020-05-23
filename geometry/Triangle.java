@@ -11,6 +11,15 @@ public class Triangle
     private Color color;
     //private Polygon triangle;
 
+    //Metodo per debug
+    public void print()
+    {
+        t[0].print();
+        t[1].print();
+        t[2].print();
+    }
+
+
     //************************************** COSTRUTTORI ********************************************** */
 
     public Triangle()
@@ -112,11 +121,6 @@ public class Triangle
     }
 
 
-
     //**************************************** FINE METODI STATICI ********************************************** */
-
-
-
-
 
 }
