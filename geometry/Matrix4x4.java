@@ -16,7 +16,7 @@ Matrice immutabile che rappresenta una trasformazione.
  Il sistema di riferimento è destrorso, x a destra, y sopra, z dallo schermo verso la persona.
 */
 
-public class Matrix4x4 
+public final class Matrix4x4 
 {
     // non è la vera è propria dimensione della matrice (che contiene 16 elementi), ma il numero di righe/colonne
     private static final int size = 4; 

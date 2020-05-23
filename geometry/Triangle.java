@@ -4,7 +4,7 @@ package framework3d.geometry;
 import java.awt.Color;
 import java.awt.Polygon;
 
-public class Triangle 
+public final class Triangle 
 {
     private final Vector4D[] t;
     private final Vector4D normal;
@@ -54,13 +54,13 @@ public class Triangle
 
     //*************************************** GET ********************************************************** */
     
-    public final Vector4D getNormal()
+    public Vector4D getNormal()
     {
         return normal;
     }
 
     //responsabilità del chiamante nel verificare l'indice passato.
-    public final Vector4D getVertex(int index)
+    public Vector4D getVertex(int index)
     {
         return t[index];
     }
@@ -73,7 +73,7 @@ public class Triangle
         return new Polygon(x, y, 3);
     }
 
-    public final Color getColor()
+    public Color getColor()
     {
         return color;
     }

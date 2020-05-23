@@ -38,7 +38,7 @@ la quarta coordinata interviene solo durante la fase di proiezione.
 normalizzando il vettore e normalizzando il vettore rispetto alla sua quarta coordinata.
 */
 
-public class Vector4D 
+public final class Vector4D 
 {
     //Array che rappresenta il vettore 4d.
     private final float[] v;

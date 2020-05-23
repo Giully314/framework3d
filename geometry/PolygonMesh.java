@@ -3,7 +3,7 @@ package framework3d.geometry;
 import java.util.*;
 import java.io.*;
 
-public class PolygonMesh 
+public final class PolygonMesh 
 {
     private final ArrayList<Triangle> mesh;
 
@@ -13,7 +13,7 @@ public class PolygonMesh
     }
 
 
-    public ArrayList<Triangle> loadObject(String fileName)
+    private ArrayList<Triangle> loadObject(String fileName)
 	{
 		ArrayList<Triangle> m = new ArrayList<>();
 		//Path p = Paths.get("..\\..\\resource\\".concat(fileName));
@@ -57,6 +57,12 @@ public class PolygonMesh
         }
 		
 		return m;
+    }
+
+
+    public ArrayList<Triangle> getMesh()
+    {
+        return mesh;
     }
 
 }
