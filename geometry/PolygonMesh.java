@@ -5,11 +5,11 @@ import java.io.*;
 
 public final class PolygonMesh 
 {
-    private final ArrayList<Triangle> mesh;
+    private final List<Triangle> mesh;
 
     public PolygonMesh(String filename)
     {
-        mesh = loadObject(filename);
+        mesh = Collections.unmodifiableList(loadObject(filename));
     }
 
 
