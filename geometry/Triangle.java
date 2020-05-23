@@ -82,7 +82,8 @@ public class Triangle
 
     //************************************ METODI DI NORMALIZZAZIONE ********************************************* */
     
-    //normalizza i 3 vertici. da fare ricerche poiché il triangolo cambia di forma. 
+    //normalizza i 3 vertici. da fare ricerche poiché il triangolo cambia di forma. Anche se c'è da tenere in considerazione che 
+    //raggruppo i punti in triangoli per comodità di calcolo e costruzione delle figure, altrimenti i punti sono indipendenti.
     public void normalize()
     {
         t[0].normalize();
@@ -90,13 +91,13 @@ public class Triangle
         t[2].normalize();
     }
 
+
     public void normalizeByW()
     {
         t[0].normalizeByW();
         t[1].normalizeByW();
         t[2].normalizeByW();
     }
-
     //************************************ FINE METODI DI NORMALIZZAZIONE ********************************************* */
 
 
