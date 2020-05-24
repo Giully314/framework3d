@@ -60,9 +60,8 @@ public final class PolygonMesh
     }
 
 
-    public ArrayList<Triangle> getMesh()
+    public List<Triangle> getMesh()
     {
         return mesh;
     }
-
 }
