@@ -1,0 +1,11 @@
+Utilizzo un mix tra Component pattern e ECS (Entity Component System). Ogni Entity ha un Component obbligatorio
+che è il TransformComponent, cioè un componente che determina posizione, rotazione e scaling dell'entity.
+
+Come funziona questo pattern? Semplicemente, al posto di avere l'oggetto che definisce direttamente, variabili, funzioni, ecc.
+abbiamo una serie di componenti indipendenti che vengono raggruppati in un'entità del gioco. Questo permette di avere diverse entità
+con diversi componenti e comporre questi componenti in altri più complessi. Niente ereditarietà, niente problema del diamante o 
+problemi di duplice definizione di un'azione. Le entità sono dei semplici contenitori di componenti e le loro azioni sono definite in
+base ai loro componenti. Un gruppo di sistemi specializzati, ognuno per componente, avrà un'array di ogni componente per fare 
+l'update in modo ordinato ed evitare di avere entità sparse o che definiscono update "privati".
+
+Mi aspetto una pizza offerta, bianca con patatine, wurstel e doppia mozzarella grazie.

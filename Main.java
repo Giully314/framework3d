@@ -17,7 +17,7 @@ public class Main
         
         Triangle p = Matrix4x4.multiplyByTriangle(m, t);
 
-        PolygonMesh mesh = new PolygonMesh("C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\menlowpoly.obj");
+        //  PolygonMesh mesh = new PolygonMesh("C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\menlowpoly.obj");
         
         //mesh.getMesh().get(0).print();
 
