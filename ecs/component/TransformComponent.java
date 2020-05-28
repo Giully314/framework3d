@@ -7,7 +7,7 @@ Questo componente si occupa di gestire la posizione dell'oggetto nel world space
 
 */
 
-public class TransformComponent
+public final class TransformComponent
 {   
     //Non è completo, versione basilare per fare prove
     private Vector4D position;
@@ -17,6 +17,10 @@ public class TransformComponent
     
     private InputComponent input;
     
+    private Vector4D scaling; //vettore di scaling della mesh
+
+
+    //aggiunta matrici da object space a world space.
     
     /*
     rotazione
@@ -25,10 +29,13 @@ public class TransformComponent
     altra roba per resettare lo stato in caso di collisione.
     */
 
-    public TransformComponent(final Vector4D position, final float velocity, InputComponent input)
+    public TransformComponent(final Vector4D position, final float velocity, final Vector4D scaling, InputComponent input)
     {
         this.position = position;
         v = velocity;
+        
+        this.scaling = scaling;
+        
         this.input = input;
     }
 
@@ -60,6 +67,12 @@ public class TransformComponent
     public Matrix4x4 getRotation()
     {
         return rotation;
+    }
+
+
+    public Vector4D getScaling()
+    {
+        return scaling;
     }
     //*********************************** FINE GET ****************************************************** */
 }

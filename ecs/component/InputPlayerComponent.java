@@ -6,7 +6,7 @@ import framework3d.handler.InputHandler;
 import framework3d.utility.KeyboardInput;
 import framework3d.geometry.*;
 
-public class InputPlayerComponent extends InputComponent
+public final class InputPlayerComponent extends InputComponent
 {
     private InputHandler inputHandler;
 
@@ -26,6 +26,8 @@ public class InputPlayerComponent extends InputComponent
         float z = 0.0f;
 
         KeyboardInput k = inputHandler.getKeyboardInput();
+
+        //coordinate mouse per calcolo della rotazione.
 
 
         if (k.keyDown(KeyEvent.VK_D))

@@ -8,4 +8,7 @@ problemi di duplice definizione di un'azione. Le entità sono dei semplici conte
 base ai loro componenti. Un gruppo di sistemi specializzati, ognuno per componente, avrà un'array di ogni componente per fare 
 l'update in modo ordinato ed evitare di avere entità sparse o che definiscono update "privati".
 
+I componenti dovrebbero essere final, cioè è preferibile, nella maggior parte dei casi, la composizione di questi
+ultimi piuttosto che l'ereditarietà. (ci sono ovviamente eccezioni, vedi InputComponent)
+
 Mi aspetto una pizza offerta, bianca con patatine, wurstel e doppia mozzarella grazie.
