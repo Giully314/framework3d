@@ -2,11 +2,21 @@ package framework3d.ecs.component;
 
 import framework3d.geometry.*;
 
-public class TransformComponent implements Component
+/*
+Questo componente si occupa di gestire la posizione dell'oggetto nel world space.
+
+*/
+
+public class TransformComponent
 {   
     //Non è completo, versione basilare per fare prove
     private Vector4D position;
+    private Matrix4x4 rotation;
     private Vector4D velocity;
+    private float v; // scalare che viene moltiplicato per il vettore velocità.
+    
+    private InputComponent input;
+    
     
     /*
     rotazione
@@ -14,25 +24,24 @@ public class TransformComponent implements Component
     vettore di scaling
     altra roba per resettare lo stato in caso di collisione.
     */
-    public TransformComponent()
-    { 
-        this(new Vector4D(), new Vector4D(1.0f, 1.0f, 0.0f));
-    }
 
-    public TransformComponent(final Vector4D position, final Vector4D velocity)
+    public TransformComponent(final Vector4D position, final float velocity, InputComponent input)
     {
         this.position = position;
-        this.velocity = velocity;
+        v = velocity;
+        this.input = input;
     }
 
-    /*posso pensare che il componente che gestisce l'input, possa passare informazioni a questo componente.
-    Oppure, poiché il componente input è un component "statico e read only condiviso da tutti", potrei passare l'oggetto ai componenti
-    che ne hanno bisogno.
-    */
-    @Override
+    
     public void update()
     {
+        InputTransformData d = input.getInputData();
 
+        rotation = d.rotation;
+        velocity = Vector4D.multiplyByScalar(d.velocity, v);
+
+
+        //Calcolo della nuova posizione + rotazione.
     }
 
     //*********************************** GET ****************************************************** */
@@ -45,6 +54,12 @@ public class TransformComponent implements Component
     public Vector4D getVelocity()
     {
         return velocity;
+    }
+
+
+    public Matrix4x4 getRotation()
+    {
+        return rotation;
     }
     //*********************************** FINE GET ****************************************************** */
 }
