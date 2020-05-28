@@ -203,6 +203,21 @@ public final class Matrix4x4
 
     //************************************* OPERAZIONI GENERALI TRA MATRICI, MATRICI E VETTORI, MATRICI E TRIANGOLI. */
 
+    public static Matrix4x4 makeTranspose(final Matrix4x4 a)
+    {
+        final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
+        for (int i = 0; i < Matrix4x4.size; ++i)
+        {
+            for (int j = 0; j < Matrix4x4.size; ++j)
+            {
+                m[j * Matrix4x4.size + i] = a.m[i * Matrix4x4.size + j]; //CONTROLLARE CACHE LOCALITY DI QUESTA VERSIONE 
+            }
+        }
+
+        return new Matrix4x4(m); 
+    }
+
+
     //Questa procedura corrisponde ad a * b, dove a e b sono due matrici quadrate 4 x 4.
     public static Matrix4x4 multiplication(final Matrix4x4 a, final Matrix4x4 b)
     {
