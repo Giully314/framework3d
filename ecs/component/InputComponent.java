@@ -7,5 +7,11 @@ in azioni (esempio, rotazione spostamento, spari, ecc)
 */
 public class InputComponent implements Component
 {
+    public boolean forward;
+    public boolean back;
+    public boolean right;
+    public boolean left;
 
+    //aggiunta di rotazione, spari, ecc. oppure creare altri componenti che ereditano. Oppure, altra soluzione,
+    //creare componenti diversi per ognuna di queste azioni.
 }
