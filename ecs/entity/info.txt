@@ -1,0 +1,3 @@
+Le interfacce del tipo *Nome*Entity servono per comunicare ai sistemi logici, come è definita l'entità. 
+Di solito in linguaggi come il C o il C++, non serve fare questo "trucchetto", poiché le entità sono dei semplici
+id che permettono di accedere ai componenti situati in array, per favorire l'accesso alla cache. 
