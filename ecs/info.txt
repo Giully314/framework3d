@@ -1,5 +1,4 @@
-Utilizzo un mix tra Component pattern e ECS (Entity Component System). Ogni Entity ha un Component obbligatorio
-che è il TransformComponent, cioè un componente che determina posizione, rotazione e scaling dell'entity.
+Utilizzo il pattern Entity Component System.
 
 Come funziona questo pattern? Semplicemente, al posto di avere l'oggetto che definisce direttamente, variabili, funzioni, ecc.
 abbiamo una serie di componenti indipendenti che vengono raggruppati in un'entità del gioco. Questo permette di avere diverse entità
@@ -9,6 +8,15 @@ base ai loro componenti. Un gruppo di sistemi specializzati, ognuno per componen
 l'update in modo ordinato ed evitare di avere entità sparse o che definiscono update "privati".
 
 I componenti dovrebbero essere final, cioè è preferibile, nella maggior parte dei casi, la composizione di questi
-ultimi piuttosto che l'ereditarietà. (ci sono ovviamente eccezioni, vedi InputComponent)
+ultimi piuttosto che l'ereditarietà. (ci sono ovviamente eccezioni, vedi InputComponent).
 
-Mi aspetto una pizza offerta, bianca con patatine, wurstel e doppia mozzarella grazie.
+Le entità sono contenitori di componenti, quindi sono perfettamente "dinamiche" al livello di progettazione e implementazione.
+Per definire un'entità statica, per esempio, posso fornirla solo del componente Position, che rappresenta la posizione nello spazio 
+3D e il suo orientamento (rotazione).
+
+I componenti sono classi simili alle struct in C, cioè dotate di soli dati e intepretati in base alla funzionalità del componente.
+I componenti non hanno metodi, poiché non possono modificare i dati che contengono, nè hanno riferimenti agli altri componenti.
+
+I sistemi sono la parte logica, cioè la parte che opera su uno o più componenti per simulare delle azioni. Un sistema che permette di
+muovere tutte le entità non statiche può lavorare su tutte le entità che hanno Position, Movement e Input come componenti. Come si 
+può vedere, questo sistema non richede informazioni aggiuntive sulle entità, su altri componenti o su altri sistemi. E' indipendente. 
