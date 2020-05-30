@@ -9,6 +9,7 @@ Questo sistema si occupa di fare da tramite tra input basso livello (tastiera, m
 (InputComponent).
 */
 
+//NOTA: QUESTO SISTEMA è DA RISCRIVERE UTILIZZANDO PARALLEL STREAM 
 public class InputSystem 
 {
     public static <T extends DynamicEntity> void update(ArrayList<T> entities)
