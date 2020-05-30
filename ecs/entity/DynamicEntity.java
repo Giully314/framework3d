@@ -6,4 +6,5 @@ public interface DynamicEntity extends StaticEntity
 {
     MovementComponent getMovementComponent();
     InputComponent getInputComponent();
+    InputInterface getInputInterface();
 }

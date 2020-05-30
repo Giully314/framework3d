@@ -13,6 +13,7 @@ Questo sistema si occupa di gestire tutte le entità dinamiche utilizzando 3 com
 necessari: InputComponent, MovementComponent, PositionComponent.
 */
 
+//NOTA: QUESTO SISTEMA è DA RISCRIVERE UTILIZZANDO PARALLEL STREAM 
 public class TransformSystem 
 {
  
@@ -51,5 +52,4 @@ public class TransformSystem
             p.position = Vector4D.add(p.position, v);
         }
     }
-
 }

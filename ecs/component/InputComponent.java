@@ -14,4 +14,13 @@ public class InputComponent implements Component
 
     //aggiunta di rotazione, spari, ecc. oppure creare altri componenti che ereditano. Oppure, altra soluzione,
     //creare componenti diversi per ognuna di queste azioni.
+
+
+    public void reset()
+    {
+        forward = false;
+        back = false;
+        right = false;
+        left = false;
+    }
 }
