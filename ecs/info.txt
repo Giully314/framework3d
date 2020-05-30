@@ -20,3 +20,4 @@ I componenti non hanno metodi, poiché non possono modificare i dati che conteng
 I sistemi sono la parte logica, cioè la parte che opera su uno o più componenti per simulare delle azioni. Un sistema che permette di
 muovere tutte le entità non statiche può lavorare su tutte le entità che hanno Position, Movement e Input come componenti. Come si 
 può vedere, questo sistema non richede informazioni aggiuntive sulle entità, su altri componenti o su altri sistemi. E' indipendente. 
+I sistemi sono stateless, cioè non hanno variabili interne. Di solito si implementano utilizzando funzioni statiche.
