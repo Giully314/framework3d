@@ -12,11 +12,11 @@ import framework3d.geometry.Triangle;
 public class RenderingSystem 
 {
 
-    public ArrayList<Triangle> render(ArrayList<RenderableEntity> renderableEntities)
-    {   
-        for (RenderableEntity e : renderableEntities)
-        {
+    // public ArrayList<Triangle> render(ArrayList<RenderableEntity> renderableEntities)
+    // {   
+    //     for (RenderableEntity e : renderableEntities)
+    //     {
             
-        }
-    }    
+    //     }
+    // }    
 }

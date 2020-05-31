@@ -60,7 +60,7 @@ public class WindowHandler extends JFrame // implements Runnable
 					g.clearRect(0, 0, getWidth(), getHeight());
 					//g.translate(0, appHeight);
 					//((Graphics2D)g).scale(1.0, -1.0);
-					renderingSystem.render(renderableEntities, g);
+					//renderingSystem.render(renderableEntities, g);
 				}
 				finally
 				{
