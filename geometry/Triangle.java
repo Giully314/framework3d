@@ -8,7 +8,8 @@ public final class Triangle
 {
     private final Vector4D[] t;
     private final Vector4D normal;
-    private Color color;
+    private Color color; //Questo è il colore "intrinseco" e immutabile del triangolo. 
+    private Color shadingColor; //Colore dopo aver applicato lo shader in base alla luce che arriva.
     //private Polygon triangle;
 
     //Metodo per debug

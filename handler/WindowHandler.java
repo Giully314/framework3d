@@ -3,7 +3,9 @@ package framework3d.handler;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
+import framework3d.ecs.entity.RenderableEntity;
 import framework3d.utility.*;
 
 import javax.swing.JFrame;
@@ -12,11 +14,11 @@ import javax.swing.SwingUtilities;
 
 //Gestisce la finestra di gioco e il rendering della finestra.
 
-public class WindowHandler extends JFrame implements Runnable
+public class WindowHandler extends JFrame // implements Runnable
 {
     private BufferStrategy bStrategy;
 
-    private volatile boolean running;
+    //private volatile boolean running;
     private Thread gameThread;
     
     protected FrameRate frameRate;
@@ -33,9 +35,120 @@ public class WindowHandler extends JFrame implements Runnable
 
     public WindowHandler(InputHandler i)
     {
-        // registro eventi input.
+        createAndShow(i);
     }
 
 
+    //*************************** IMPLEMENTAZIONE METODO INTERFACCIA RUNNABLE *********************************************/
+    
+    
+    
+    //*************************** FINE IMPLEMENTAZIONE METODO INTERFACCIA RUNNABLE *********************************************/
+
+    public void render(ArrayList<RenderableEntity> renderableEntities)
+    {
+        do
+		{
+			do
+			{
+				Graphics g = null;
+				
+				try
+				{
+					g = bStrategy.getDrawGraphics();
+					g.clearRect(0, 0, getWidth(), getHeight());
+					//g.translate(0, appHeight);
+					//((Graphics2D)g).scale(1.0, -1.0);
+					renderFrame(renderableEntities, g);
+				}
+				finally
+				{
+					if (g != null)
+					{
+						g.dispose();
+					}
+				}
+				
+			}while (bStrategy.contentsRestored());
+			
+			bStrategy.show();
+			
+		}while (bStrategy.contentsLost());
+    }
+
+
+    private void renderFrame(ArrayList<RenderableEntity> renderableEntities, Graphics g)
+    {
+        
+    }
+
+    //*********************************** AVVIO E CHIUSURADELL'APP ************************************* */
+    
+    /** 
+     * Inizializza le risorse collegate alla finestra e crea la finestra.
+    */
+
+    public void createAndShow(InputHandler i)
+    {
+        canvas = new Canvas();
+		canvas.setBackground(appBackground);
+		canvas.setIgnoreRepaint(true);
+		getContentPane().add(canvas);
+		setLocationByPlatform(true);
+		
+		canvas.setSize(appWidth, appHeight);
+		pack();
+	
+		setTitle(appTitle);
+		
+		canvas.addKeyListener(i.getKeyboardInput());
+		
+		setVisible(true);
+		
+		canvas.createBufferStrategy(3); 
+		bStrategy = canvas.getBufferStrategy();
+		
+		canvas.requestFocus();
+		
+		// gameThread = new Thread(this);
+		// gameThread.start();
+    }
+
+
+
+    // protected void onWindowClosing()
+	// {
+	// 	try
+	// 	{
+	// 		running = false;
+	// 		gameThread.join();
+	// 	}
+	// 	catch (InterruptedException e)
+	// 	{
+	// 		e.printStackTrace();
+	// 	}
+		
+	// 	System.exit(0);
+	// }
+	
+	
+	// protected static void launchApp(final WindowHandler app, final InputHandler i)
+	// {
+	// 	app.addWindowListener(new WindowAdapter() {
+	// 		public void windowClosing(WindowEvent e)
+	// 		{
+	// 			app.onWindowClosing();
+	// 		}
+	// 	});
+		
+	// 	SwingUtilities.invokeLater(new Runnable() {
+	// 		public void run()
+	// 		{
+	// 			app.createAndShow(i);
+	// 		}
+	// 	});
+	// }
+
+	//********************** FINE METODI AVVIO E CHISURA APP **************************************** */
     
 }
