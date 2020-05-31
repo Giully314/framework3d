@@ -6,6 +6,7 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
 import framework3d.ecs.entity.RenderableEntity;
+import framework3d.ecs.system.RenderingSystem;  
 import framework3d.utility.*;
 
 import javax.swing.JFrame;
@@ -45,7 +46,7 @@ public class WindowHandler extends JFrame // implements Runnable
     
     //*************************** FINE IMPLEMENTAZIONE METODO INTERFACCIA RUNNABLE *********************************************/
 
-    public void render(ArrayList<RenderableEntity> renderableEntities)
+    public void render(RenderingSystem renderingSystem, ArrayList<RenderableEntity> renderableEntities)
     {
         do
 		{
@@ -59,7 +60,7 @@ public class WindowHandler extends JFrame // implements Runnable
 					g.clearRect(0, 0, getWidth(), getHeight());
 					//g.translate(0, appHeight);
 					//((Graphics2D)g).scale(1.0, -1.0);
-					renderFrame(renderableEntities, g);
+					renderingSystem.render(renderableEntities, g);
 				}
 				finally
 				{
@@ -74,12 +75,6 @@ public class WindowHandler extends JFrame // implements Runnable
 			bStrategy.show();
 			
 		}while (bStrategy.contentsLost());
-    }
-
-
-    private void renderFrame(ArrayList<RenderableEntity> renderableEntities, Graphics g)
-    {
-        
     }
 
     //*********************************** AVVIO E CHIUSURADELL'APP ************************************* */

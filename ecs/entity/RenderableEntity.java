@@ -1,8 +1,8 @@
 package framework3d.ecs.entity;
 
-import framework3d.ecs.component.RenderComponent;
+import framework3d.ecs.component.RenderingComponent;
 
 public interface RenderableEntity 
 {
-    RenderComponent getRenderComponent();    
+    RenderingComponent getRenderComponent();    
 }

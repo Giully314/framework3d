@@ -17,7 +17,7 @@ necessari: InputComponent, MovementComponent, PositionComponent.
 public class TransformSystem 
 {
  
-    public static <T extends DynamicEntity> void update(ArrayList<T> entities)
+    public <T extends DynamicEntity> void update(ArrayList<T> entities)
     {
         for (DynamicEntity e : entities)
         {

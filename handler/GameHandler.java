@@ -14,6 +14,7 @@ public class GameHandler
     
     private TransformSystem transformSystem;
     private InputSystem inputSystem;
+    private RenderingSystem renderingSystem;
     
     //******* FINE SISTEMI ********** */
 
@@ -26,6 +27,11 @@ public class GameHandler
     //******** FINE INTERFACCE ENTITA' ****** */
     
 
+    //********* FINETRA ****** */
+    
+    private WindowHandler window;
+
+    //********* FINE FINETRA ****** */
 
 
 }
