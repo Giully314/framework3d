@@ -12,7 +12,7 @@ public class RenderingSystem
 {
     //Se al posto di passare un array di entità passassi direttamente un buffeer con i soli triangoli
     //già ordinati? 
-    public <T extends RenderableEntity> void render(ArrayList<T> renderableEntities, Graphics g)
+    public void render(ArrayList<RenderableEntity> renderableEntities, Graphics g)
     {   
         for (RenderableEntity e : renderableEntities)
         {
