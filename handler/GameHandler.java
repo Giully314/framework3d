@@ -10,6 +10,9 @@ Questa classe rappresenta il code del gioco. Gestisce e sincronizza tutte le ope
 */
 public class GameHandler 
 {
+    Handler handler;
+
+
     //******* SISTEMI ********** */
     
     private TransformSystem transformSystem;
@@ -64,6 +67,14 @@ public class GameHandler
         //Inizializzazione sistemi
         transformSystem = new TransformSystem();
         inputSystem = new InputSystem();
+
+
+        //Inizializzazione handlere
+        handler = new Handler(inputHandler);
+
+
+        //Inizializzazione array entità
+        dynamicEntities = new ArrayList<>();
     }
     
     /****************************** FINE METODI DI SETUP *********************************** */
@@ -104,7 +115,9 @@ public class GameHandler
         
         float secPerFrame;
 
-        while (true)
+        int tempCounterLoop = 4;
+
+        while (tempCounterLoop >= 0)
 		{
 			//IMPOSTARE GAME LOOP OGNI SESSANTESIMO DI SECONDO TRAMITE UN IF.
 			currentTime = System.nanoTime();
@@ -130,6 +143,7 @@ public class GameHandler
                 updateTransformComponents(secPerFrame);
 
                 --elapsedTime;
+                --tempCounterLoop;
 			}
 			//da controllare se fare il rendering del frame più velocemente possibile e non vincolato dall'update dello stato
 			//del gioco ogni 1/60, sia una cosa positiva alle performance generali e alla visione.
@@ -158,4 +172,13 @@ public class GameHandler
     /************************************* FINE GAME LOOP *********************************************************** */
 
 
+
+    /************************************* GET *********************************************** */
+
+    public Handler getHandler()
+    {
+        return handler;
+    }
+
+    /************************************** FINE GET ***************************************** */
 }

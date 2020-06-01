@@ -22,13 +22,22 @@ public class ProvaPlayer extends Entity implements DynamicEntity, LivingEntity
     {
         move = new MovementComponent();
         move.velocity = new Vector4D(2.0f, 2.0f, 2.0f);
-        move.velocity = new Vector4D(1.0f, 1.0f, 1.0f);
+        move.angularVelocity = new Vector4D(1.0f, 1.0f, 1.0f);
 
         input = new InputComponent();
 
         rawInput = new PlayerInput(i);
     }
 
+
+    //Metodo debug
+    public void print()
+    {
+        move.velocity.print();
+        move.angularVelocity.print();
+
+        position.position.print();
+    }
 
 
 
@@ -58,5 +67,4 @@ public class ProvaPlayer extends Entity implements DynamicEntity, LivingEntity
     {
         return health;
     }
-
 }
