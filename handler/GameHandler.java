@@ -27,11 +27,18 @@ public class GameHandler
     //******** FINE INTERFACCE ENTITA' ****** */
     
 
-    //********* FINESTRA ****** */
+    //********* GESTIONE FINESTRA ****** */
     
-    private WindowHandler window;
+    private WindowHandler windowHandler;
 
-    //********* FINE FINESTRA ****** */
+    //********* FINE GESTIONE FINESTRA ****** */
+
+
+    /***************** GESTIONE INPUT *************************** */
+    
+    private InputHandler inputHandler;
+
+    /***************** FINE GESTIONE INPUT *************************** */
 
 
     /********************** COSTRUTTORI ***************************************** */
@@ -48,6 +55,13 @@ public class GameHandler
     
     private void init()
     {
+        //Inizializzazione finestra
+
+
+        //Inizializzazione risorse input
+        inputHandler = new InputHandler();
+
+        //Inizializzazione sistemi
         transformSystem = new TransformSystem();
         inputSystem = new InputSystem();
     }
@@ -109,6 +123,8 @@ public class GameHandler
                 // nsPerFrame / 1.0E9 Converto in secondi.
                 
                 secPerFrame = nsPerFrame / 1.0E9f;
+
+                updateInput();
                 
                 updateInputComponents(secPerFrame);
                 updateTransformComponents(secPerFrame);
@@ -131,6 +147,12 @@ public class GameHandler
     private void updateTransformComponents(float elapsedTime)
     {
         transformSystem.update(dynamicEntities);
+    }
+
+    //update di tutte le classi che gestiscono input di qualsiasi tipo (tastiera, mouse, AI).
+    private void updateInput()
+    {
+        inputHandler.update();
     }
     
     /************************************* FINE GAME LOOP *********************************************************** */
