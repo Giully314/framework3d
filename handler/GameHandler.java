@@ -75,6 +75,11 @@ public class GameHandler
 
         //Inizializzazione array entità
         dynamicEntities = new ArrayList<>();
+
+
+        //Inizializzazione finestra 
+        windowHandler = new WindowHandler(inputHandler);
+        WindowHandler.launchApp(windowHandler, inputHandler);
     }
     
     /****************************** FINE METODI DI SETUP *********************************** */
@@ -117,7 +122,7 @@ public class GameHandler
 
         int tempCounterLoop = 4;
 
-        while (tempCounterLoop >= 0)
+        while (true)
 		{
 			//IMPOSTARE GAME LOOP OGNI SESSANTESIMO DI SECONDO TRAMITE UN IF.
 			currentTime = System.nanoTime();

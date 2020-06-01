@@ -20,7 +20,7 @@ public class WindowHandler extends JFrame // implements Runnable
     private BufferStrategy bStrategy;
 
     //private volatile boolean running;
-    private Thread gameThread;
+    //private Thread gameThread;
     
     protected FrameRate frameRate;
 	protected Canvas canvas;
@@ -30,13 +30,13 @@ public class WindowHandler extends JFrame // implements Runnable
 	protected Font appFont = new Font("Courier New", Font.PLAIN, 14);
 	protected String appTitle = "TBD-Title";
 	
-	protected int appHeight;
-    protected int appWidth;
+	protected int appHeight = 720;
+    protected int appWidth = 1280;
 
 
     public WindowHandler(InputHandler i)
     {
-        createAndShow(i);
+        //createAndShow(i);
     }
 
 
@@ -127,22 +127,22 @@ public class WindowHandler extends JFrame // implements Runnable
 	// }
 	
 	
-	// protected static void launchApp(final WindowHandler app, final InputHandler i)
-	// {
-	// 	app.addWindowListener(new WindowAdapter() {
-	// 		public void windowClosing(WindowEvent e)
-	// 		{
-	// 			app.onWindowClosing();
-	// 		}
-	// 	});
+	public static void launchApp(final WindowHandler app, final InputHandler i)
+	{
+		app.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e)
+			{
+				//app.onWindowClosing();
+			}
+		});
 		
-	// 	SwingUtilities.invokeLater(new Runnable() {
-	// 		public void run()
-	// 		{
-	// 			app.createAndShow(i);
-	// 		}
-	// 	});
-	// }
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				app.createAndShow(i);
+			}
+		});
+	}
 
 	//********************** FINE METODI AVVIO E CHISURA APP **************************************** */
     

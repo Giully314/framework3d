@@ -17,7 +17,6 @@ public class Main
 
         game.gameLoop();
 
-
-        
+        p.print();
     }
 }

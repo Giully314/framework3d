@@ -22,6 +22,7 @@ public class KeyboardInput implements KeyListener
 	
 	public boolean keyDown(int keyCode)
 	{
+		System.out.println(polled[keyCode] > 0);
 		return polled[keyCode] > 0;
 	}
 	
