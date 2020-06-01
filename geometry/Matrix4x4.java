@@ -210,6 +210,7 @@ public final class Matrix4x4
         {
             for (int j = 0; j < Matrix4x4.size; ++j)
             {
+                //da sistemare
                 m[j * Matrix4x4.size + i] = a.m[i * Matrix4x4.size + j]; //CONTROLLARE CACHE LOCALITY DI QUESTA VERSIONE 
             }
         }
