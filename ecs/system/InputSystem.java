@@ -1,25 +1,87 @@
 package framework3d.ecs.system;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import framework3d.ecs.entity.DynamicEntity;
+import framework3d.ecs.action.ActionInterface;
+import framework3d.handler.InputHandlerInterface;
+import framework3d.ecs.entity.*;
 
 /*
-Questo sistema si occupa di fare da tramite tra input basso livello (tastiera, mouse, AI) e input alto livello
-(InputComponent).
+Questo sistema si occupa di "interpretare" i dati, provenienti da input basso livello, in azioni. 
 */
 
-//NOTA: QUESTO SISTEMA è DA RISCRIVERE UTILIZZANDO PARALLEL STREAM 
-public class InputSystem 
+public class InputSystem implements ComponentSystem
 {
-    public void update(ArrayList<DynamicEntity> entities)
-    {
-        for (DynamicEntity d : entities)
-        {
-            var ic = d.getInputComponent();
-            var i = d.getInputInterface();
+    private ArrayList<InputHandlerInterface> rawInput;
+    
+    private HashMap<Integer, String> input; 
+    private HashMap<String, ActionInterface> output;
 
-            i.updateInput(ic);
+
+    public InputSystem(InputHandlerInterface i)
+    {
+        initialize();
+        
+        rawInput.add(i);
+    }
+
+
+    @Override
+    public void initialize()
+    {
+        rawInput = new ArrayList<>();
+
+        input = new HashMap<>();
+        output = new HashMap<>();
+    }
+
+
+
+    public void registerInput(int event, String actionName)
+    {
+        System.out.println(event + " " + actionName);
+        input.put(event, actionName);
+    }
+
+    public void registerOutput(String actionName, ActionInterface action)
+    {
+        System.out.println(actionName + action.getClass().getName());
+        output.put(actionName, action);
+    }
+
+    // public void deleteInputAction(int event)
+    // {
+    //     input.remove(event);
+    // }
+
+
+    // public void deleteOutputAction(String actionName)
+    // {
+    //     output.remove(actionName);
+    // }
+
+
+    public void update()
+    {
+        //System.out.println("ciao1");
+        //da cambiare utilizzando stream
+        for (int i = 0; i < rawInput.size(); ++i)
+        {
+            //System.out.println("ciao2");
+            int[] events = rawInput.get(i).getKeysEvents();
+
+            for (int j = 0; j < events.length && events[j] != -1; ++j)
+            {
+                //System.out.println("ciao3");
+                var a = output.get(input.get(events[j]));
+
+                if (a != null)
+                {
+                    System.out.println("ciao");
+                    a.executeAction();
+                }
+            }
         }
     }
 }

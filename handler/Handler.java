@@ -8,9 +8,9 @@ un Handler che ha tutto quello che serve con i vari metodi get.
 
 public class Handler 
 {
-    private final InputHandler inputHandler;
+    private final RawInputHandler inputHandler;
 
-    public Handler(InputHandler inputHandler)
+    public Handler(RawInputHandler inputHandler)
     {
         this.inputHandler = inputHandler;
     }
@@ -19,7 +19,7 @@ public class Handler
     //metodi get per InputHandler, Sistemi, ecc
 
 
-    public InputHandler getInputHandler()
+    public RawInputHandler getInputHandler()
     {
         return inputHandler;
     }

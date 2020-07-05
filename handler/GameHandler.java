@@ -1,8 +1,11 @@
 package framework3d.handler;
 
+import java.awt.event.*;
+
 import java.util.ArrayList;
 
 import framework3d.ecs.system.*;
+import framework3d.ecs.action.ActionInterface;
 import framework3d.ecs.entity.*;
 
 /*
@@ -15,9 +18,9 @@ public class GameHandler
 
     //******* SISTEMI ********** */
     
-    private TransformSystem transformSystem;
+    //private TransformSystem transformSystem;
     private InputSystem inputSystem;
-    private RenderingSystem renderingSystem;
+    //private RenderingSystem renderingSystem;
     
     //******* FINE SISTEMI ********** */
 
@@ -25,7 +28,7 @@ public class GameHandler
     //******** INTERFACCE ENTITA' ****** */
     
     private ArrayList<DynamicEntity> dynamicEntities;
-    private ArrayList<RenderableEntity> renderableEntities;
+    //private ArrayList<RenderableEntity> renderableEntities;
     
     //******** FINE INTERFACCE ENTITA' ****** */
     
@@ -39,7 +42,7 @@ public class GameHandler
 
     /***************** GESTIONE INPUT *************************** */
     
-    private InputHandler inputHandler;
+    private RawInputHandler inputHandler;
 
     /***************** FINE GESTIONE INPUT *************************** */
 
@@ -62,11 +65,11 @@ public class GameHandler
 
 
         //Inizializzazione risorse input
-        inputHandler = new InputHandler();
+        inputHandler = new RawInputHandler();
 
         //Inizializzazione sistemi
-        transformSystem = new TransformSystem();
-        inputSystem = new InputSystem();
+        //transformSystem = new TransformSystem();
+        inputSystem = new InputSystem(inputHandler);
 
 
         //Inizializzazione handlere
@@ -80,6 +83,26 @@ public class GameHandler
         //Inizializzazione finestra 
         windowHandler = new WindowHandler(inputHandler);
         WindowHandler.launchApp(windowHandler, inputHandler);
+
+
+        inputSystem.registerInput(KeyEvent.VK_W, "playerForward");
+        inputSystem.registerOutput("playerForward", new ActionInterface(){
+        
+            @Override
+            public void executeAction() {
+                System.out.println("Funziona tutto");
+            }
+        });
+        
+        inputSystem.registerInput(KeyEvent.VK_ESCAPE, "esc");
+        inputSystem.registerOutput("esc", new ActionInterface(){
+        
+            @Override
+            public void executeAction() {
+                System.exit(0);
+            }
+        });
+    
     }
     
     /****************************** FINE METODI DI SETUP *********************************** */
@@ -146,7 +169,8 @@ public class GameHandler
                 
                 updateInputComponents(secPerFrame);
                 updateTransformComponents(secPerFrame);
-
+                
+                
                 --elapsedTime;
                 --tempCounterLoop;
 			}
@@ -159,13 +183,13 @@ public class GameHandler
     //MODIFICARE I SISTEMI COSì DA PRENDERE IN INPUT NELLA FUNZIONE UPDATE IL TEMPO PASSATO.
     private void updateInputComponents(float elapsedTime)
     {
-        inputSystem.update(dynamicEntities);
+        inputSystem.update();
     }
 
 
     private void updateTransformComponents(float elapsedTime)
     {
-        transformSystem.update(dynamicEntities);
+        //transformSystem.update(dynamicEntities, elapsedTime);
     }
 
     //update di tutte le classi che gestiscono input di qualsiasi tipo (tastiera, mouse, AI).

@@ -140,6 +140,16 @@ public final class Matrix4x4
         return new Matrix4x4(m);
     }
 
+
+    public static Matrix4x4 makeAffineTransformation(Vector4D scaling, Matrix4x4 rotation, Vector4D position)
+    {
+        Matrix4x4 w = multiplication(rotation, makeScaling(scaling.getCoordinate(0), 
+                        scaling.getCoordinate(1), scaling.getCoordinate(2)));
+
+        return multiplication(makeTranslation(position.getCoordinate(0), position.getCoordinate(1), 
+                position.getCoordinate(2)), w);
+    }
+
     //******************** FINE TRASFORMAZIONI ********************************** */
 
     //********************** PROIEZIONI **************************************** */
@@ -220,6 +230,7 @@ public final class Matrix4x4
 
 
     //Questa procedura corrisponde ad a * b, dove a e b sono due matrici quadrate 4 x 4.
+    //da leggere da destra verso sinistra visto che utilizzo column major order.
     public static Matrix4x4 multiplication(final Matrix4x4 a, final Matrix4x4 b)
     {
         final float[] m = new float[Matrix4x4.size * Matrix4x4.size];

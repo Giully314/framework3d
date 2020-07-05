@@ -5,8 +5,8 @@ import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
-import framework3d.ecs.entity.RenderableEntity;
-import framework3d.ecs.system.RenderingSystem;  
+// import framework3d.ecs.entity.RenderableEntity;
+// import framework3d.ecs.system.RenderingSystem;  
 import framework3d.utility.*;
 
 import javax.swing.JFrame;
@@ -34,9 +34,9 @@ public class WindowHandler extends JFrame // implements Runnable
     protected int appWidth = 1280;
 
 
-    public WindowHandler(InputHandler i)
+    public WindowHandler(RawInputHandler i)
     {
-        //createAndShow(i);
+        createAndShow(i);
     }
 
 
@@ -46,36 +46,36 @@ public class WindowHandler extends JFrame // implements Runnable
     
     //*************************** FINE IMPLEMENTAZIONE METODO INTERFACCIA RUNNABLE *********************************************/
 
-    public void render(RenderingSystem renderingSystem, ArrayList<RenderableEntity> renderableEntities)
-    {
-        do
-		{
-			do
-			{
-				Graphics g = null;
+    // public void render(RenderingSystem renderingSystem, ArrayList<RenderableEntity> renderableEntities)
+    // {
+    //     do
+	// 	{
+	// 		do
+	// 		{
+	// 			Graphics g = null;
 				
-				try
-				{
-					g = bStrategy.getDrawGraphics();
-					g.clearRect(0, 0, getWidth(), getHeight());
-					//g.translate(0, appHeight);
-					//((Graphics2D)g).scale(1.0, -1.0);
-					//renderingSystem.render(renderableEntities, g);
-				}
-				finally
-				{
-					if (g != null)
-					{
-						g.dispose();
-					}
-				}
+	// 			try
+	// 			{
+	// 				g = bStrategy.getDrawGraphics();
+	// 				g.clearRect(0, 0, getWidth(), getHeight());
+	// 				//g.translate(0, appHeight);
+	// 				//((Graphics2D)g).scale(1.0, -1.0);
+	// 				//renderingSystem.render(renderableEntities, g);
+	// 			}
+	// 			finally
+	// 			{
+	// 				if (g != null)
+	// 				{
+	// 					g.dispose();
+	// 				}
+	// 			}
 				
-			}while (bStrategy.contentsRestored());
+	// 		}while (bStrategy.contentsRestored());
 			
-			bStrategy.show();
+	// 		bStrategy.show();
 			
-		}while (bStrategy.contentsLost());
-    }
+	// 	}while (bStrategy.contentsLost());
+    // }
 
     //*********************************** AVVIO E CHIUSURADELL'APP ************************************* */
     
@@ -83,13 +83,13 @@ public class WindowHandler extends JFrame // implements Runnable
      * Inizializza le risorse collegate alla finestra e crea la finestra.
     */
 
-    public void createAndShow(InputHandler i)
+    public void createAndShow(RawInputHandler i)
     {
         canvas = new Canvas();
 		canvas.setBackground(appBackground);
 		canvas.setIgnoreRepaint(true);
 		getContentPane().add(canvas);
-		setLocationByPlatform(true);
+		//setLocationByPlatform(true);
 		
 		canvas.setSize(appWidth, appHeight);
 		pack();
@@ -127,7 +127,7 @@ public class WindowHandler extends JFrame // implements Runnable
 	// }
 	
 	
-	public static void launchApp(final WindowHandler app, final InputHandler i)
+	public static void launchApp(final WindowHandler app, final RawInputHandler i)
 	{
 		app.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e)
@@ -145,5 +145,4 @@ public class WindowHandler extends JFrame // implements Runnable
 	}
 
 	//********************** FINE METODI AVVIO E CHISURA APP **************************************** */
-    
 }

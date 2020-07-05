@@ -2,11 +2,11 @@ package framework3d.handler;
 
 import framework3d.utility.*;
 
-public class InputHandler 
+public class RawInputHandler implements InputHandlerInterface
 {
     private KeyboardInput keyboard;
 
-    public InputHandler()
+    public RawInputHandler()
     {
         keyboard = new KeyboardInput();
     }
@@ -16,6 +16,11 @@ public class InputHandler
     public void update()
     {
         keyboard.poll();
+    }
+
+    public int[] getKeysEvents()
+    {
+        return keyboard.getKeysEvents();
     }
 
     

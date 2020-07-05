@@ -7,8 +7,14 @@ problemi di duplice definizione di un'azione. Le entità sono dei semplici conte
 base ai loro componenti. Un gruppo di sistemi specializzati, ognuno per componente, avrà un'array di ogni componente per fare 
 l'update in modo ordinato ed evitare di avere entità sparse o che definiscono update "privati".
 
+
+Il pattern che ho implementato, è statico, cioè non permette l'aggiunta/rimozione di componenti a runtime. Questo perché il gioco 
+non prevede queste funzionalità, e non mi è sembrato il caso di aggiungere cose aggiuntive.
+
+
 I componenti dovrebbero essere final, cioè è preferibile, nella maggior parte dei casi, la composizione di questi
-ultimi piuttosto che l'ereditarietà. (ci sono ovviamente eccezioni, vedi InputComponent).
+ultimi piuttosto che l'ereditarietà. (ci sono ovviamente eccezioni, vedi InputComponent). I componenti come membri delle entità 
+devono essere final, cioè non possono essere cambiati con componenti dello stesso tipo, ma solo modificati.
 
 Le entità sono contenitori di componenti, quindi sono perfettamente "dinamiche" al livello di progettazione e implementazione.
 Per definire un'entità statica, per esempio, posso fornirla solo del componente Position, che rappresenta la posizione nello spazio 

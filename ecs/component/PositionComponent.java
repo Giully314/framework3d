@@ -7,6 +7,44 @@ Componente base presente in tutte le entit√†. Definisce la posizione dell'entit√
 */
 public class PositionComponent implements Component
 {
-    public Vector4D position;
-    public Matrix4x4 rotation;
+    private Vector4D position;
+    private Matrix4x4 rotation;
+    
+
+
+
+
+    //****************************** GET *************************************** */
+    
+    public Vector4D getPosition()
+    {
+        return position;
+    }
+
+
+    public Matrix4x4 getRotation()
+    {
+        return rotation;
+    }
+    
+    //****************************** FINE GET *************************************** */
+
+
+
+    //************************************ SET ************************************ */
+    
+    public void setPosition(final Vector4D position)
+    {
+        this.position = position;
+    }
+
+
+    public void setRotation(final Matrix4x4 rotation)
+    {
+        this.rotation = rotation;
+    }
+    
+    //************************************ FINE SET ************************************ */
+
+
 }
