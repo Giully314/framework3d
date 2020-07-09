@@ -2,7 +2,6 @@ package framework3d.utility;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
 
 /*
  * 
@@ -17,7 +16,7 @@ public class KeyboardInput implements KeyListener
 	public KeyboardInput()
 	{
 		keys = new boolean[256];
-		polled = new int[256];
+		polled = new int[257]; //uno spazio in più per segnare la fine della coda.
 	}
 	
 	

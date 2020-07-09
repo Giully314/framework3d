@@ -7,7 +7,6 @@ public class ControllerComponent implements Component
     private boolean right;
     private boolean left;
 
-    //Aggiunta comando per sparare
 
 
     //*************************** GET ********************************* */

@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import framework3d.ecs.action.ActionInterface;
 import framework3d.handler.InputHandlerInterface;
-import framework3d.ecs.entity.*;
 
 /*
 Questo sistema si occupa di "interpretare" i dati, provenienti da input basso livello, in azioni. 
@@ -64,21 +63,17 @@ public class InputSystem implements ComponentSystem
 
     public void update()
     {
-        //System.out.println("ciao1");
         //da cambiare utilizzando stream
         for (int i = 0; i < rawInput.size(); ++i)
         {
-            //System.out.println("ciao2");
             int[] events = rawInput.get(i).getKeysEvents();
 
             for (int j = 0; j < events.length && events[j] != -1; ++j)
             {
-                //System.out.println("ciao3");
                 var a = output.get(input.get(events[j]));
 
                 if (a != null)
                 {
-                    System.out.println("ciao");
                     a.executeAction();
                 }
             }

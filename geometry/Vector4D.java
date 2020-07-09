@@ -84,6 +84,42 @@ public final class Vector4D
     }
     //********************* FINE COSTRUTTORI ******************************** */
 
+    //********************************************** OPERAZIONI TRA VETTORI *************************************** */
+    
+    public void add(final Vector4D w)
+    {
+        v[0] += w.v[0];
+        v[1] += w.v[1];
+        v[2] += w.v[2];
+    }
+
+
+    public void sub(final Vector4D w)
+    {
+        v[0] -= w.v[0];
+        v[1] -= w.v[1];
+        v[2] -= w.v[2];
+    }
+
+
+    public void multiplyByScalar(float c)
+    {
+        v[0] *= c;
+        v[1] *= c;
+        v[2] *= c;
+        
+        //moltiplicare anche la quarta coordinata?? 
+    }
+
+
+    public void setCoordinate(int index, float value)
+    {
+        v[index] = value;
+    }
+
+    //********************************************** FINE OPERAZIONI TRA VETTORI *************************************** */
+
+
 
     //********************* METODO GET PER LE COORDINATE ******************** */
     

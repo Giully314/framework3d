@@ -8,7 +8,7 @@ Per semplicità, tutte le entità nel gioco sono dinamiche. Questa semplificazio
 sarà molto più semplice da sviluppare.
 */
 
-public interface DynamicEntity extends ControllableEntity
+public interface DynamicEntity extends StaticEntity, ControllableEntity
 {
     MovementComponent getMovementComponent();
 }
