@@ -1,0 +1,10 @@
+Nota sulla progettazione dell'architettura dei sistemi.
+Poiché il contesto del gioco è molto specifico, il sistema sviluppato è un sistema statico. Significa che i vari
+componenti vengono aggiunti nel codice della classe. Nel caso di un gioco che necessita di più dinamicità, il 
+sistema può essere scritto in modo dinamico, permettendo l'aggiunta di array di componenti in modo dinamico.
+
+
+I sistemi logici che si occupano della fisica svolgono 3 compiti: 
+simulazione del movimento e applicazione delle leggi fisiche (gravità).
+check delle collisioni.
+risoluzione delle collisioni.
