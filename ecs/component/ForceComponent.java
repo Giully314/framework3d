@@ -11,6 +11,17 @@ public class ForceComponent extends Component
     poiché la forza verrà calcolata come forza di gravità tra i vari corpi presenti.
     */
     public int maxForceValue = 1000; 
+
+    //Di quanti newton aumenta ogni t.
+    //public int forceStep = 100;
     
     public Vector4D force = new Vector4D();    
+
+    @Override
+    public void printComponent()
+    {
+        System.out.println("ForceComponent");
+        force.print();
+        System.out.println("maxForceValue: " + maxForceValue);
+    }
 }

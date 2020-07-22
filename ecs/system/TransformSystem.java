@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
+
 import framework3d.ecs.entity.EntityRef;
 import framework3d.geometry.Vector4D;
 import framework3d.ecs.component.Component;
@@ -20,6 +21,7 @@ import framework3d.ecs.component.PositionComponent;
 public class TransformSystem implements ComponentSystem
 {
     //Capacità degli array che contengono i vari componenti.
+    private final double gravitationalCostant = 6.67408E-11; 
     private int size;
 
     private ArrayList<PositionComponent> positions;
@@ -27,6 +29,9 @@ public class TransformSystem implements ComponentSystem
     private ArrayList<AccelerationComponent> accelerations;
     private ArrayList<MassComponent> masses;
     private ArrayList<ForceComponent> forces;
+
+
+    
 
     //HashMap per fast look up 
     //private HashMap<Class<? extends Component>, ArrayList<? extends Component>> cache;
@@ -36,11 +41,20 @@ public class TransformSystem implements ComponentSystem
     {
         size = 10;
 
-        positions = new ArrayList<>(Arrays.asList(new PositionComponent[size]));
-        velocities = new ArrayList<>(Arrays.asList(new VelocityComponent[size]));
-        accelerations = new ArrayList<>(Arrays.asList(new AccelerationComponent[size]));
-        masses = new ArrayList<>(Arrays.asList(new MassComponent[size]));
-        forces = new ArrayList<>(Arrays.asList(new ForceComponent[size]));
+        positions = new ArrayList<>(size);
+        velocities = new ArrayList<>(size);
+        accelerations = new ArrayList<>(size);
+        masses = new ArrayList<>(size);
+        forces = new ArrayList<>(size);
+
+        for (int i = 0; i < size; ++i)
+        {
+            positions.add(new PositionComponent());
+            velocities.add(new VelocityComponent());
+            accelerations.add(new AccelerationComponent());
+            masses.add(new MassComponent());
+            forces.add(new ForceComponent());
+        }
 
         //cache.put(PositionComponent.class, positions);
     }
@@ -78,6 +92,7 @@ public class TransformSystem implements ComponentSystem
         e.registerComponent(ForceComponent.class, forces.get(id));
     }
 
+
     public void simulate(double elapsedTime)
     {
         //Implementazione primo stadio motore fisico.
@@ -91,13 +106,40 @@ public class TransformSystem implements ComponentSystem
         //Controllare componenti attivi
         //Sistemare size, magari avendo due parametri per evitare troppi componenti non attivi
 
-        //DA PARALLELIZZARE
+        //QUESTO NON SI PUò PARALLELIZZARE
+        //Utilizzo approssimazione di Eulero per simulare le 3 leggi di Newton.
+        IntStream.range(0, size).filter(index -> 
+        positions.get(index).getState()
+        ).forEach(index -> 
+        {
+            updateForce(index);
+        }
+        );
+
+        
+        //DA PARALLELIZZARE TUTTI E 3
         IntStream.range(0, size).filter(index -> 
            positions.get(index).getState()
         ).forEach(index -> 
         {
             updateAcceleration(accelerations.get(index), forces.get(index), masses.get(index));
+        }
+        );
+
+
+        IntStream.range(0, size).filter(index -> 
+           positions.get(index).getState()
+        ).forEach(index -> 
+        {
             updateVelocity(velocities.get(index), accelerations.get(index), elapsedTime);
+        }
+        );
+
+
+        IntStream.range(0, size).filter(index -> 
+           positions.get(index).getState()
+        ).forEach(index -> 
+        {
             updatePosition(positions.get(index), velocities.get(index), elapsedTime);
         }
         );
@@ -115,10 +157,88 @@ public class TransformSystem implements ComponentSystem
         p.position.add(Vector4D.multiplyByScalar(v.velocity, (float)elapsedTime));
     }
 
+
     private void updateAcceleration(AccelerationComponent a, ForceComponent f, MassComponent m)
     {
-        a.acceleration.add(Vector4D.multiplyByScalar(f.force, 1.0f / m.mass));
+        //CHECK SE MASSA != 0
+        a.acceleration = Vector4D.multiplyByScalar(f.force, 1.0f / m.mass);
     }
 
+
+    //Ci penso dopo a scriverla in maniera più efficiente (togliendo if, facendo il refactoring ecc)
+    private void updateForce(int index)
+    {
+        PositionComponent p = positions.get(index);
+        ForceComponent f = forces.get(index);
+        MassComponent m = masses.get(index);
+
+        f.force.reset();
+
+        for (int i = 0; i < size; ++i)
+        {
+            if (i == index) continue;
+            
+            PositionComponent p2 = positions.get(i);
+            
+            if (!p2.getState()) continue;
+
+            MassComponent m2 = masses.get(i);
+
+
+            double w = m.mass * m2.mass * (float)gravitationalCostant;
+            Vector4D diffPosition = Vector4D.sub(p2.position, p.position);
+            // System.out.println(index);
+            // diffPosition.print();
+            double distance = diffPosition.length();
+            double sqrdDistance = Math.pow(diffPosition.length(), 2.0);   
+
+            diffPosition.normalize();
+
+            if (sqrdDistance != 0)
+            {
+                f.force.add(Vector4D.multiplyByScalar(diffPosition, (float)w / (float)distance));
+            }   
+        }
+    }   
+
     /******************************************* FINE EQUAZIONI DEL MOTO ****************************** */
+
+
+    public void printEntities()
+    {
+        System.out.println("*************************************************\n");
+        for (int i = 0; i < size; ++i)
+        {
+            var p = positions.get(i);
+            var v = velocities.get(i);
+            var a = accelerations.get(i);
+            var m = masses.get(i);
+            var f = forces.get(i);
+
+            if (!p.getState())
+            {
+                continue;
+            }
+
+            System.out.println("Entity id: " + i);
+
+            System.out.print("Posizione: ");
+            p.position.print();
+
+            System.out.print("Velocità: ");
+            v.velocity.print();
+
+            System.out.print("Accelerazione: ");
+            a.acceleration.print();
+
+            System.out.println("Massa: " + m.mass);
+            
+            System.out.print("Forza: ");
+            f.force.print();
+            
+            System.out.print("\n\n");
+        }
+
+        System.out.println("*************************************************\n\n");
+    }
 }

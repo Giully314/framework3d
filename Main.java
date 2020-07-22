@@ -1,8 +1,13 @@
 package framework3d;
 
-
-
-import java.util.HashMap;
+import framework3d.ecs.component.ForceComponent;
+import framework3d.ecs.component.MassComponent;
+import framework3d.ecs.component.PositionComponent;
+import framework3d.ecs.component.VelocityComponent;
+import framework3d.ecs.entity.EntityHandler;
+import framework3d.ecs.entity.EntityRef;
+import framework3d.ecs.system.TransformSystem;
+import framework3d.geometry.Vector4D;
 
 //import framework3d.handler.GameHandler;
 
@@ -10,59 +15,59 @@ import java.util.HashMap;
 
 public class Main 
 {   
-    public static void main(String[] args)
+    public static void main(String[] args) throws InterruptedException
     {
-        //GameHandler game = new GameHandler();
+        EntityHandler handler = new EntityHandler();
+
+        EntityRef e1 = handler.entityCreate();
+        EntityRef e2 = handler.entityCreate();
+
+        e1.printEntity();
+        e2.printEntity();
+
+        TransformSystem t = new TransformSystem();
+
+        t.registerEntity(e1);
+        t.registerEntity(e2);
         
-        HashMap<Class<? extends Component>, Component> m = new HashMap<>();
 
-        Class<Position> p = Position.class;
+        PositionComponent p1 = e1.getComponent(PositionComponent.class);
+        PositionComponent p2 = e2.getComponent(PositionComponent.class);
+
+        p1.position = new Vector4D(0, 0, 0);
+        p2.position = new Vector4D(-60, 0, 0);
+
+        MassComponent m1 = e1.getComponent(MassComponent.class);
+        MassComponent m2 = e2.getComponent(MassComponent.class);
+
+        m1.mass = 10000000000000L;
+        m2.mass = 10000;
+
+
+        ForceComponent f1 = e1.getComponent(ForceComponent.class);
+        ForceComponent f2 = e2.getComponent(ForceComponent.class);
+
+        VelocityComponent v1 = e1.getComponent(VelocityComponent.class);
+        VelocityComponent v2 = e2.getComponent(VelocityComponent.class);
+
+
+        v2.velocity = new Vector4D(0, 40, 0);
         
-        Position p2 = new Position();
-        m.put(p, p2);
 
+        // f1.force = new Vector4D(100, 100, 100);
+        // f2.force = new Vector4D();
 
-        m.put(Velocity.class, new Velocity());
-
-        //game.gameLoop();
-
-        Class<? extends Component> s = Position.class;
-
-        if (s == Position.class)
+        //t.simulate(1);
+        for (int i = 0; i < 60; ++i)
         {
-            System.out.println("EVVIVAAAAAAAAAAAAAAAAAAA");
+            System.out.println("Step: " + i);
+            t.printEntities();
+            t.simulate(1);
+            Thread.sleep(2000);
         }
 
-        //(Position)s;
+
         
-        // Position o = p.cast(s);
-
-        // int w = 4;
-
-        // short q = 5;
-
-        // int e = (int)q + w;
-        
-
-        //System.out.println(((Position)m.get(Position.class)).a);
-
+        t.printEntities();
     }
-
-
-    public interface Component
-    {
-
-    }
-
-
-    public static class Position implements Component
-    {
-        public int a = 32;
-    }
-
-    public static class Velocity implements Component
-    {
-        public int a = 89;
-    }
-
 }

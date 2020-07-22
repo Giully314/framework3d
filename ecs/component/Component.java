@@ -12,6 +12,11 @@ public abstract class Component
 {
     private boolean state = false;
 
+    public void printComponent()
+    {
+        
+    }
+
 
     public void activateComponent()
     {

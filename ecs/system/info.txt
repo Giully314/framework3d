@@ -4,7 +4,15 @@ componenti vengono aggiunti nel codice della classe. Nel caso di un gioco che ne
 sistema può essere scritto in modo dinamico, permettendo l'aggiunta di array di componenti in modo dinamico.
 
 
-I sistemi logici che si occupano della fisica svolgono 3 compiti: 
-simulazione del movimento e applicazione delle leggi fisiche (gravità).
+TRANSFORM SYSTEM
+Il sistema logico che si occupa della fisica svolge 3 compiti: 
+simulazione del movimento e applicazione delle leggi fisiche (gravità ecc).
 check delle collisioni.
 risoluzione delle collisioni.
+
+
+
+INPUT SYSTEM 
+Il sistema di input fa da layer collegante tra il basso input e le azioni da svolgere. Svolge questo compito 
+attraverso due map che servono per mappare i numeri in input (esempio tasti o numeri dall'intelligenza artificiale)
+in azioni da svolgere. Il sistema si interfaccia alle varie classi di input con l'interfaccia RawInputInterface.

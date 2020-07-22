@@ -6,4 +6,13 @@ public class AccelerationComponent extends Component
 {
     public Vector4D acceleration = new Vector4D();
     public Vector4D angularAcceleration = new Vector4D();
+
+
+    @Override
+    public void printComponent()
+    {
+        System.out.println("AccelerationComponent");
+        acceleration.print();
+        angularAcceleration.print();
+    }
 }

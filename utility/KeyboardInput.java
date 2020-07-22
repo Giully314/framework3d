@@ -8,7 +8,7 @@ import java.awt.event.KeyListener;
  * PER SITUAZIONI "SEMPLICI" QUESTA CLASSE VA BENE, ALTRIMENTI è PERICOLOSA. POTREBBE MISSARE DEGLI EVENTI.
 */
 
-public class KeyboardInput implements KeyListener
+public class KeyboardInput implements KeyListener, RawInputInterface
 {
 	private boolean[] keys;
 	private int[] polled;
@@ -33,7 +33,7 @@ public class KeyboardInput implements KeyListener
 	// }
 
 
-	public int[] getKeysEvents()
+	public int[] getRawInput()
 	{
 		return polled;
 	}

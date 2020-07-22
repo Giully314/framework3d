@@ -29,11 +29,13 @@ public class EntityHandler
     }
 
 
+    //Dopo aver chiamato questa funzione, l'entità è inutilizzabile.
     public void entityDestroy(EntityRef e)
     {
         availableID.addFirst(e.getID());
 
         //Disattivare i componenti associati all'entità.
+        e.deleteComponents();
     }
 
     /******************************************** FINE CREATE AND DESTROY ENTITY ************************************************ */

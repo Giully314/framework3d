@@ -161,6 +161,15 @@ public final class Vector4D
     {
         return (float)Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
     }
+
+
+    public void reset()
+    {
+        v[0] = 0.0f;
+        v[1] = 0.0f;
+        v[2] = 0.0f;
+        v[3] = 1.0f;
+    }
     //********************* FINE METODI PER LA NORMALIZZAZIONE VETTORE  ****************************/
 
 
