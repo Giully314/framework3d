@@ -10,6 +10,8 @@ import framework3d.ecs.system.TransformSystem;
 import framework3d.ecs.system.ComponentSystem;
 
 
+import java.awt.Graphics;
+
 public class WorldEngine implements Engine
 {
     /* Gestione entità */
@@ -83,13 +85,20 @@ public class WorldEngine implements Engine
     }
 
 
+    @Override 
+    public void renderScene(Graphics g)
+    {
+        //renderingSystem.render();
+    }
+
+
     @Override
     public EntityHandler getEntityHandler()
     {
         return entityHandler;
     }
 
-    
+
     //Ritorna null se il sistema non è presente.
     @Override
     public <T extends ComponentSystem> T getSystem(Class<T> s)

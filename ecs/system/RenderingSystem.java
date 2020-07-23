@@ -92,7 +92,7 @@ public class RenderingSystem implements ComponentSystem
     @Override
     public void setEngine(Engine e)
     {
-        engine = e;
+        engine = e; 
     }
 
 

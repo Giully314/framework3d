@@ -9,7 +9,7 @@ public abstract class State
 {
     private static State currentState;
 
-    private Engine engine;
+    protected Engine engine;
 
 
     static
@@ -39,9 +39,9 @@ public abstract class State
 
     //********************* METODI DA IMPLEMENTARE DA PARTE DELLE CLASSI CHE EREDITANO ********************** */
 
-    public abstract void update(double elapsedTime);
+    public abstract void updateState(double elapsedTime, Graphics g);
     
-    public abstract void render(Graphics g);
+    //public abstract void render(Graphics g);
 
 
 }
