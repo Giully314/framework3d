@@ -1,10 +1,14 @@
 package framework3d.ecs;
 
+import java.util.HashMap;
+
 import framework3d.ecs.entity.EntityHandler;
 import framework3d.ecs.entity.EntityRef;
 import framework3d.ecs.system.InputSystem;
 import framework3d.ecs.system.RenderingSystem;
 import framework3d.ecs.system.TransformSystem;
+import framework3d.ecs.system.ComponentSystem;
+
 
 public class WorldEngine implements Engine
 {
@@ -12,7 +16,7 @@ public class WorldEngine implements Engine
 
     private EntityHandler entityHandler;
     
-    /* ***************** */
+    /* ***************** */ 
 
 
     /********* Sistemi ********** */
@@ -24,15 +28,29 @@ public class WorldEngine implements Engine
     /*************************** */
 
 
+    /************ Accesso ai sistemi ********* */
+    
+    private HashMap<Class<? extends ComponentSystem>, ComponentSystem> systems;
+
+    /**************************************** */
+
+
     public WorldEngine()
     {
-        entityHandler = new EntityHandler();
+        entityHandler = new EntityHandler(this);
 
-        transformSystem = new TransformSystem();
-        renderingSystem = new RenderingSystem();
-        inputSystem = new InputSystem();
+        transformSystem = new TransformSystem(this);
+        renderingSystem = new RenderingSystem(this);
+        inputSystem = new InputSystem(this);
+
+        systems = new HashMap<>();
+
+        systems.put(TransformSystem.class, transformSystem);
+        systems.put(RenderingSystem.class, renderingSystem);
+        systems.put(InputSystem.class, inputSystem);
     }
 
+    /*************************************** INTERFACCIA ENGINE ****************************** */
     @Override
     public EntityRef entityCreate()
     {
@@ -54,4 +72,31 @@ public class WorldEngine implements Engine
 
 
 
+    @Override
+    public void updateSceneState(double elapsedTime)
+    {
+        inputSystem.processRawInput();
+
+        transformSystem.simulate(elapsedTime);
+
+        //renderingSystem.render();
+    }
+
+
+    @Override
+    public EntityHandler getEntityHandler()
+    {
+        return entityHandler;
+    }
+
+    
+    //Ritorna null se il sistema non è presente.
+    @Override
+    public <T extends ComponentSystem> T getSystem(Class<T> s)
+    {
+        return s.cast(systems.get(s));
+    }
+
+
+    /*************************************** FINE INTERFACCIA ENGINE ****************************** */
 }

@@ -2,14 +2,20 @@ package framework3d.ecs.entity;
 
 import java.util.LinkedList;
 
+import framework3d.ecs.Engine;
+
 public class EntityHandler 
 {
+    private Engine engine;
+
     private int nextAvailableID;
     private LinkedList<Integer> availableID;
 
 
-    public EntityHandler()
+
+    public EntityHandler(Engine e)
     {
+        engine = e;
         nextAvailableID = 0;
         availableID = new LinkedList<>();
     }
@@ -52,4 +58,19 @@ public class EntityHandler
         //(Non superiore a 30).
         nextAvailableID += numberOfElementsToInsert;
     }
+
+
+    //*********************************** GET AND SET ENGINE ************************************* */
+    
+    public Engine getEngine()
+    {
+        return engine;
+    }
+
+    public void setEngine(Engine e)
+    {
+        engine = e;
+    }
+    
+    //*********************************** FINE GET AND SET ENGINE ************************************* */
 }

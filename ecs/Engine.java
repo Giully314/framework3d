@@ -1,6 +1,8 @@
 package framework3d.ecs;
 
 import framework3d.ecs.entity.EntityRef;
+import framework3d.ecs.entity.EntityHandler;
+import framework3d.ecs.system.ComponentSystem;
 
 /*
 Interfaccia per la definizione di un Engine. Una classe Engine simula una scena all'interno di una sezione 
@@ -18,6 +20,13 @@ public interface Engine
     EntityRef entityCreate();
 
     void entityDestroy(EntityRef e);
+
+    <T extends ComponentSystem> T getSystem(Class<T> s);
+
+    EntityHandler getEntityHandler();
+
+    void updateSceneState(double elapsedTime);
+
 
     default void shutdown()
     {

@@ -11,6 +11,7 @@ import framework3d.ecs.entity.EntityRef;
 import framework3d.geometry.Vector4D;
 import framework3d.ecs.component.Component;
 import framework3d.ecs.component.ForceComponent;
+import framework3d.ecs.Engine;
 import framework3d.ecs.component.AccelerationComponent;
 import framework3d.ecs.component.VelocityComponent;
 import framework3d.ecs.component.MassComponent;
@@ -20,6 +21,9 @@ import framework3d.ecs.component.PositionComponent;
 
 public class TransformSystem implements ComponentSystem
 {
+    private Engine engine;
+
+
     //Capacità degli array che contengono i vari componenti.
     private final double gravitationalCostant = 6.67408E-11; 
     private int size;
@@ -37,8 +41,9 @@ public class TransformSystem implements ComponentSystem
     //private HashMap<Class<? extends Component>, ArrayList<? extends Component>> cache;
 
 
-    public TransformSystem()
+    public TransformSystem(Engine e)
     {
+        engine = e;
         size = 10;
 
         positions = new ArrayList<>(size);
@@ -46,6 +51,7 @@ public class TransformSystem implements ComponentSystem
         accelerations = new ArrayList<>(size);
         masses = new ArrayList<>(size);
         forces = new ArrayList<>(size);
+
 
         for (int i = 0; i < size; ++i)
         {
@@ -60,39 +66,9 @@ public class TransformSystem implements ComponentSystem
     }
 
 
-    public void registerEntity(EntityRef e)
-    {
-        int id = e.getID();
-
-        //Controllo se l'id passato è maggiore del numero di elementi allocato e in caso affermativo alloco altri componenti.
-        if (id >= size)
-        {
-            positions.addAll(Arrays.asList(new PositionComponent[(id - size) + 10]));
-            velocities.addAll(Arrays.asList(new VelocityComponent[(id - size) + 10]));
-            accelerations.addAll(Arrays.asList(new AccelerationComponent[(id - size) + 10]));
-            masses.addAll(Arrays.asList(new MassComponent[(id - size) + 10]));
-            forces.addAll(Arrays.asList(new ForceComponent[(id - size) + 10]));
-
-            size = positions.size();
-        }
-
-        //Attivo i componenti.
-        positions.get(id).activateComponent();
-        velocities.get(id).activateComponent();
-        accelerations.get(id).activateComponent();
-        masses.get(id).activateComponent();
-        forces.get(id).activateComponent();
-        
-
-        //Registro i componenti all'interno dell'entità.
-        e.registerComponent(PositionComponent.class, positions.get(id));
-        e.registerComponent(VelocityComponent.class, velocities.get(id));
-        e.registerComponent(AccelerationComponent.class, accelerations.get(id));
-        e.registerComponent(MassComponent.class, masses.get(id));
-        e.registerComponent(ForceComponent.class, forces.get(id));
-    }
-
-
+    /*
+    SEMBRA CHE CI SIANO DEI PROBLEMI NEL CALCOLO DELLA FORZA. FARE DEI CHECK.
+    */
     public void simulate(double elapsedTime)
     {
         //Implementazione primo stadio motore fisico.
@@ -241,4 +217,57 @@ public class TransformSystem implements ComponentSystem
 
         System.out.println("*************************************************\n\n");
     }
+
+
+    /******************************** INTERFACCIA COMPONENT SYSTEM ************************************* */
+    
+    @Override
+    public Engine getEngine()
+    {
+        return engine;
+    }
+
+    @Override
+    public void setEngine(Engine e)
+    {
+        engine = e;
+    }
+
+    @Override
+    public void registerEntity(EntityRef e)
+    {
+        int id = e.getID();
+
+        //Controllo se l'id passato è maggiore del numero di elementi allocato e in caso affermativo alloco altri componenti.
+        if (id >= size)
+        {
+            //Da aumentare prima la capacity e poi aggiungere gli elementi.
+            for (int i = 0; i < id - size + 10; ++i)
+            {
+                positions.add(new PositionComponent());
+                velocities.add(new VelocityComponent());
+                accelerations.add(new AccelerationComponent());
+                masses.add(new MassComponent());
+                forces.add(new ForceComponent());
+            }
+            size = positions.size();
+        }
+
+        //Attivo i componenti.
+        positions.get(id).activateComponent();
+        velocities.get(id).activateComponent();
+        accelerations.get(id).activateComponent();
+        masses.get(id).activateComponent();
+        forces.get(id).activateComponent();
+        
+
+        //Registro i componenti all'interno dell'entità.
+        e.registerComponent(PositionComponent.class, positions.get(id));
+        e.registerComponent(VelocityComponent.class, velocities.get(id));
+        e.registerComponent(AccelerationComponent.class, accelerations.get(id));
+        e.registerComponent(MassComponent.class, masses.get(id));
+        e.registerComponent(ForceComponent.class, forces.get(id));
+    }
+
+    /******************************** FINE INTERFACCIA COMPONENT SYSTEM ************************************* */
 }

@@ -35,13 +35,13 @@ public class Main
         PositionComponent p2 = e2.getComponent(PositionComponent.class);
 
         p1.position = new Vector4D(0, 0, 0);
-        p2.position = new Vector4D(-60, 0, 0);
+        p2.position = new Vector4D(60, 0, 0);
 
         MassComponent m1 = e1.getComponent(MassComponent.class);
         MassComponent m2 = e2.getComponent(MassComponent.class);
 
-        m1.mass = 10000000000000L;
-        m2.mass = 10000;
+        m1.mass = 100000000;
+        m2.mass = 100;
 
 
         ForceComponent f1 = e1.getComponent(ForceComponent.class);
@@ -51,7 +51,7 @@ public class Main
         VelocityComponent v2 = e2.getComponent(VelocityComponent.class);
 
 
-        v2.velocity = new Vector4D(0, 40, 0);
+        //v2.velocity = new Vector4D(0, 40, 0);
         
 
         // f1.force = new Vector4D(100, 100, 100);

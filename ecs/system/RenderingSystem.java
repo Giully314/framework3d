@@ -1,5 +1,6 @@
 package framework3d.ecs.system;
 
+import framework3d.ecs.Engine;
 import framework3d.ecs.component.MeshComponent;
 import framework3d.ecs.component.PositionComponent;
 import framework3d.ecs.entity.EntityRef;
@@ -18,32 +19,33 @@ object space -> world space -> camera space -> homogeneus clip space -> window s
 
 public class RenderingSystem implements ComponentSystem
 {
+    private Engine engine;
+
     private ArrayList<MeshComponent> meshes;
 
 
-    public RenderingSystem()
+    public RenderingSystem(Engine e)
     {
+        engine = e;
         meshes = new ArrayList<>();
-    }
-
-    public void registerEntity(EntityRef e)
-    {
-        //Verifica che ci sia posto per la mesh all'interno dell'array
     }
 
 
     //Da modificare il nome della funzione. Questo sistema non renderizza la grafica, ma i poligoni.
     public void render(ArrayList<PositionComponent> positions)
     {
-        fromObjectSpaceToWorldSpace(positions);
+        ArrayList<Triangle> buffer = fromObjectSpaceToWorldSpace(positions);
+        fromWorldSpaceToCameraSpace(buffer);
     }
 
 
-    private void fromObjectSpaceToWorldSpace(ArrayList<PositionComponent> positions)
+    private ArrayList<Triangle> fromObjectSpaceToWorldSpace(ArrayList<PositionComponent> positions)
     {
         /*
         Da aggiungere scaling della mesh
-        */
+        */  
+        //Da calcolare la capacity giusta
+        ArrayList<Triangle> buffer = new ArrayList<>(1000);
 
         //DA PARALLELIZZARE 
         for (int i = 0; i < meshes.size(); ++i)
@@ -66,6 +68,40 @@ public class RenderingSystem implements ComponentSystem
             {
                 worldSpaceObject.add(Matrix4x4.multiplyByTriangle(world, m.get(i)));
             }
+
+            buffer.addAll(worldSpaceObject);
         }
+
+        return buffer;
     }
+
+
+    private void fromWorldSpaceToCameraSpace(ArrayList<Triangle> buffer /*, camera */)
+    {
+
+    }
+
+    /******************************** INTERFACCIA COMPONENT SYSTEM ************************************* */
+    
+    @Override
+    public Engine getEngine()
+    {
+        return engine;
+    }
+
+    @Override
+    public void setEngine(Engine e)
+    {
+        engine = e;
+    }
+
+
+    @Override
+    public void registerEntity(EntityRef e)
+    {
+        //Verifica che ci sia posto per la mesh all'interno dell'array
+    }
+
+    /******************************** FINE INTERFACCIA COMPONENT SYSTEM ************************************* */
+
 }

@@ -32,12 +32,18 @@ public class KeyboardInput implements KeyListener, RawInputInterface
 	// 	return polled[keyCode] == 1;
 	// }
 
-
+	@Override
 	public int[] getRawInput()
 	{
 		return polled;
 	}
 	
+	@Override
+	public void updateInputState()
+	{
+		poll();
+	}
+
 	
 	public synchronized void poll()
 	{

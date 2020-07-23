@@ -9,4 +9,6 @@ utilizzati dall' InputSystem.
 public interface RawInputInterface 
 {
     int[] getRawInput();
+
+    void updateInputState();
 }

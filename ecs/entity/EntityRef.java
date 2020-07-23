@@ -6,6 +6,9 @@ import framework3d.ecs.component.Component;
 
 public class EntityRef 
 {
+    //Aggiungere riferimento all'entity handler da cui è stata creata questa classe.
+
+
     //Si potrebbe utilizzare uno short, visto che il numero di entità disponibili contemporaneamente è basso.
     private final int id;
 
