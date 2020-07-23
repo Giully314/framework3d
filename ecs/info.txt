@@ -1,4 +1,4 @@
-Utilizzo il pattern Entity Component System.
+Utilizzo del pattern Entity Component System.
 
 Come funziona questo pattern? Semplicemente, al posto di avere l'oggetto che definisce direttamente, variabili, funzioni, ecc.
 abbiamo una serie di componenti indipendenti che vengono raggruppati in un'entità del gioco. Questo permette di avere diverse entità

@@ -40,6 +40,11 @@ public class TransformSystem implements ComponentSystem
     //HashMap per fast look up 
     //private HashMap<Class<? extends Component>, ArrayList<? extends Component>> cache;
 
+    //costruttore momentaneo per fare i test nel main. Ogni sistema deve avere un riferimento alla scena a cui appartiene.
+    public TransformSystem()
+    {
+        this(null);
+    }
 
     public TransformSystem(Engine e)
     {
