@@ -29,5 +29,7 @@ public class Main
         GameHandler g = new GameHandler("ciao", 1280, 720);
 
         g.start();
+
+        
     }
 }

@@ -1,12 +1,12 @@
 package framework3d.ecs.component;
 
-import framework3d.geometry.Matrix4x4;
+import framework3d.geometry.Vector4D;
 import framework3d.geometry.PolygonMesh;
 
 public class MeshComponent extends Component
 {   
     public PolygonMesh mesh = null;
-    public Matrix4x4 scale = Matrix4x4.makeScaling(1.5f, 1.5f, 1.5f);
+    public Vector4D scale = new Vector4D(2, 2, 2, 1);
 
     @Override
     public void printComponent()

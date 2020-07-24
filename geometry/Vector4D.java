@@ -41,7 +41,7 @@ normalizzando il vettore e normalizzando il vettore rispetto alla sua quarta coo
 public final class Vector4D 
 {
     //Array che rappresenta il vettore 4d.
-    private final float[] v;
+    public final float[] v; //momentaneamente public
 
 
     //Metodo per debug

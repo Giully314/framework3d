@@ -333,6 +333,8 @@ public final class Matrix4x4
         Vector4D w = Matrix4x4.multiplyByVector(a, t.getVertex(1));
         Vector4D b = Matrix4x4.multiplyByVector(a, t.getVertex(2));
 
+
+
         return new Triangle(v, w, b);
     }
 

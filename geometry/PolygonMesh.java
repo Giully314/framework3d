@@ -5,6 +5,7 @@ import java.io.*;
 
 public final class PolygonMesh 
 {
+	//rendere arraylist
     private final List<Triangle> mesh;
 
     public PolygonMesh(String filename)

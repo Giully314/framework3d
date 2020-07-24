@@ -8,8 +8,8 @@ import java.awt.Graphics2D;
 
 public final class Triangle 
 {
-    private final Vector4D[] t;
-    private final Vector4D normal;
+    public final Vector4D[] t; //momentaneamente public
+    private Vector4D normal;
     private Color color; //Questo è il colore "intrinseco" e immutabile del triangolo. 
     //private Color shadingColor; //Colore dopo aver applicato lo shader in base alla luce che arriva.
     //private Polygon triangle;
@@ -123,6 +123,15 @@ public final class Triangle
     }
     //************************************ FINE METODI DI NORMALIZZAZIONE ********************************************* */
 
+
+    public void calculateNormal()
+	{
+		Vector4D a = Vector4D.sub(t[1], t[0]);
+        Vector4D b = Vector4D.sub(t[2], t[0]);
+    
+		
+		normal = Vector4D.crossProduct(a, b);
+	}
 
     //**************************************** METODI STATICI ********************************************** */
 

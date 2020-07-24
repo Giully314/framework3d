@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 
 import framework3d.game.state.*;
 import framework3d.ecs.*;
+import framework3d.ecs.action.ActionInterface;
 import framework3d.ecs.component.InputComponent;
 import framework3d.ecs.component.MeshComponent;
 import framework3d.ecs.component.PositionComponent;
@@ -96,15 +97,15 @@ public class GameHandler implements Runnable
         angle = 0.0f;
 
         InputComponent shipInput = ship.getComponent(InputComponent.class);
-        // shipInput.input.put(KeyEvent.VK_W, "forward");
-        // shipInput.output.put("forward", new Action)
+        shipInput.input.put(KeyEvent.VK_W, "forward");
+        shipInput.output.put("forward", () -> System.out.println("ciaoo"));
 
         PositionComponent shipPosition = ship.getComponent(PositionComponent.class);
-        shipPosition.position = new Vector4D(0.0f, 0.0f, -4.0f, 1.0f);
+        shipPosition.position = new Vector4D(0.0f, 0.0f, -15.0f, 1.0f);
 
         //Questo passaggio è da automatizzare con una funzione
         MeshComponent shipMesh = ship.getComponent(MeshComponent.class);
-        shipMesh.mesh = new PolygonMesh("C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\menlowpoly.obj");
+        shipMesh.mesh = new PolygonMesh("C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\spaceship.obj");
         shipMesh.mesh.printMesh();
         engine.activateAllComponents(ship);
 
@@ -113,8 +114,6 @@ public class GameHandler implements Runnable
         camera = engine.entityCreate();
 
         //setup della camera
-
-        System.out.println(camera.getComponent(PositionComponent.class).position.getCoordinate(0));
 
 
         //Collegamento camera navicella attraverso input component.
@@ -196,6 +195,8 @@ public class GameHandler implements Runnable
         long current;
         long lastTime = System.nanoTime();
 
+        long nsPerFrame;
+
         //Meglio rendere la variabile atomica.
         while (isRunning)
         {   
@@ -203,18 +204,19 @@ public class GameHandler implements Runnable
 
             current = System.nanoTime();
 
-            elapsedTime += (current - lastTime) / timePerUpdate;
+            nsPerFrame = current - lastTime;
+            elapsedTime += nsPerFrame / timePerUpdate;
+
 
             lastTime = current;
 
-            if (elapsedTime >= 2)
+            if (elapsedTime >= 1)
             {
                 //update e render
-                update(elapsedTime);
+                update(nsPerFrame/1.0E09);
 
                 render();
 
-                --elapsedTime;
                 --elapsedTime;
             }
         }
@@ -229,10 +231,11 @@ public class GameHandler implements Runnable
     
     private void update(double elapsedTime)
     {
-        // if (State.getState() != null)
-        // {
-        //     State.getState().updateLogicState(elapsedTime);
-        // }
+        if (State.getState() != null)
+        {
+            State.getState().updateLogicState(elapsedTime);
+        }
+        
         angle += 1.0f * elapsedTime;
         ship.getComponent(PositionComponent.class).rotation = Matrix4x4.makeRotationY(angle);
     }
