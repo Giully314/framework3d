@@ -2,7 +2,9 @@ package framework3d.geometry;
 
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Polygon;
+import java.awt.Graphics2D;
 
 public final class Triangle 
 {
@@ -27,6 +29,7 @@ public final class Triangle
     {
         t = new Vector4D[3];
         normal = Vector4D.crossProduct(Vector4D.sub(t[1], t[0]), Vector4D.sub(t[2], t[0]));
+        color = Color.BLUE;
     }
 
 
@@ -34,6 +37,7 @@ public final class Triangle
     {
         t = new Vector4D[] {a, b, c};
         normal = Vector4D.crossProduct(Vector4D.sub(t[1], t[0]), Vector4D.sub(t[2], t[0]));
+        color = Color.BLUE;
     }
 
 
@@ -41,6 +45,7 @@ public final class Triangle
     {
         this.t = t;
         normal = Vector4D.crossProduct(Vector4D.sub(t[1], t[0]), Vector4D.sub(t[2], t[0]));
+        color = Color.BLUE;
     }
 
     private Triangle(final Vector4D[] t, final Vector4D normal, final Color color)
@@ -108,6 +113,14 @@ public final class Triangle
         t[1].normalizeByW();
         t[2].normalizeByW();
     }
+
+
+    public void clearW()
+    {
+        t[0].clearW();
+        t[1].clearW();
+        t[2].clearW();
+    }
     //************************************ FINE METODI DI NORMALIZZAZIONE ********************************************* */
 
 
@@ -124,4 +137,11 @@ public final class Triangle
 
     //**************************************** FINE METODI STATICI ********************************************** */
 
+
+    /******************************* SETUP GRAPHICS ****************************************** */
+    public void setupAndDraw(Graphics g)
+    {
+        ((Graphics2D)g).setColor(color);
+        ((Graphics2D)g).fillPolygon(getPolygon());
+    }
 }

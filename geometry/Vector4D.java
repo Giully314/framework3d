@@ -56,6 +56,11 @@ public final class Vector4D
         System.out.println(v[3] + " )");
     }
 
+    public void clearW()
+	{
+		v[3] = 1.0f;
+	}
+
     //******************* COSTRUTTORI ******************************** */
     public Vector4D()
     {

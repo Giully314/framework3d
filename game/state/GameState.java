@@ -22,9 +22,14 @@ public class GameState extends State
 
 
     @Override
-    public void updateState(double elapsedTime, Graphics g)
+    public void updateLogicState(double elapsedTime)
     {
         engine.updateSceneState(elapsedTime);
-        engine.renderScene(g);
     }   
+
+    @Override
+    public void render(Graphics g)
+    {
+        engine.renderScene(g);
+    }
 }

@@ -80,15 +80,13 @@ public class WorldEngine implements Engine
         inputSystem.processRawInput();
 
         transformSystem.simulate(elapsedTime);
-
-        //renderingSystem.render();
     }
 
 
     @Override 
     public void renderScene(Graphics g)
     {
-        //renderingSystem.render();
+        renderingSystem.render(transformSystem.getPositions(), g);
     }
 
 
@@ -106,6 +104,14 @@ public class WorldEngine implements Engine
         return s.cast(systems.get(s));
     }
 
+
+    @Override
+    public void activateAllComponents(EntityRef e)
+    {
+        transformSystem.activateComponent(e);
+        inputSystem.activateComponent(e);
+        renderingSystem.activateComponent(e);
+    }
 
     /*************************************** FINE INTERFACCIA ENGINE ****************************** */
 }

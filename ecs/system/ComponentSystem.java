@@ -3,6 +3,9 @@ package framework3d.ecs.system;
 import framework3d.ecs.entity.EntityRef;
 
 import framework3d.ecs.Engine;
+import framework3d.ecs.component.Component;
+
+import java.util.ArrayList;
 
 /*
 Interfaccia comune a tutti i sistemi. I sistemi potrebbero eseguire delle azioni per inizializzare il loro stato
@@ -34,9 +37,12 @@ public interface ComponentSystem
 
 
     void registerEntity(EntityRef e);
+    void activateComponent(EntityRef e);
 
     Engine getEngine();
     void setEngine(Engine e);
+
+    //<T extends Component> ArrayList<T> getComponent(Class<T> c);
 
     default void shutdown()
     {

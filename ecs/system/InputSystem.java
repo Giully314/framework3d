@@ -6,13 +6,13 @@ import java.util.HashMap;
 import framework3d.ecs.Engine;
 import framework3d.ecs.action.ActionInterface;
 import framework3d.ecs.component.InputComponent;
+import framework3d.ecs.component.Component;
 import framework3d.ecs.entity.EntityRef;
 import framework3d.utility.RawInputInterface;
 
 public class InputSystem implements ComponentSystem
 {
     private Engine engine;
-
 
     //Dovrebbe essere un'array, ma io utilizzo solo la tastiera come input basso livello.
     private RawInputInterface rawInput;
@@ -32,6 +32,8 @@ public class InputSystem implements ComponentSystem
     
     public InputSystem(Engine e, RawInputInterface r)
     {
+        super();
+
         engine = e;
         rawInput = r;
         size = 10;
@@ -121,8 +123,17 @@ public class InputSystem implements ComponentSystem
         
 
         InputComponent i = inputs.get(id);
-        i.activateComponent();
+        //i.activateComponent();
         e.registerComponent(InputComponent.class, i);
+    }
+
+    @Override
+    public void activateComponent(EntityRef e)
+    {
+        int id = e.getID();
+
+        //Attivo i componenti.
+        inputs.get(id).activateComponent();
     }
     
     /******************************** FINE INTERFACCIA COMPONENT SYSTEM ************************************* */

@@ -23,6 +23,8 @@ public interface Engine
 
     void entityDestroy(EntityRef e);
 
+    void activateAllComponents(EntityRef e);
+
     <T extends ComponentSystem> T getSystem(Class<T> s);
 
     EntityHandler getEntityHandler();

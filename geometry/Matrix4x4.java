@@ -190,7 +190,7 @@ public final class Matrix4x4
     x e y corrispondo all'angolo sinistro in basso. widht e height a larghezza e lunghezza della finestra.
     far e near corrispondono ai due piani definiti per la matrice di proiezione.
     */
-    public static Matrix4x4 makeViewport(int originX, int originY,  int near, int far, int width, int height)
+    public static Matrix4x4 makeViewport(int originX, int originY,  float near, float far, int width, int height)
     {
         final float[] m = new float[Matrix4x4.size * Matrix4x4.size];
         
@@ -212,6 +212,67 @@ public final class Matrix4x4
     //********************** FINE PROIEZIONI **************************************** */
 
     //************************************* OPERAZIONI GENERALI TRA MATRICI, MATRICI E VETTORI, MATRICI E TRIANGOLI. */
+
+    //PESSIMA VERSIONE INEFFICIENTE, PROVAR A TROVARE ALTRO
+    public static Matrix4x4 makeInverse(Matrix4x4 m)
+    {
+        //printMatrix(m);
+        m = Matrix4x4.makeTranspose(m);
+
+
+        var A2323 = m.m[2 * Matrix4x4.size + 2] * m.m[3 * Matrix4x4.size + 3] - m.m[2 * Matrix4x4.size + 3] * m.m[3 * Matrix4x4.size + 2] ;
+        var A1323 = m.m[2 * Matrix4x4.size + 1] * m.m[3 * Matrix4x4.size + 3] - m.m[2 * Matrix4x4.size + 3] * m.m[3 * Matrix4x4.size + 1] ;
+        var A1223 = m.m[2 * Matrix4x4.size + 1] * m.m[3 * Matrix4x4.size + 2] - m.m[2 * Matrix4x4.size + 2] * m.m[3 * Matrix4x4.size + 1] ;
+        var A0323 = m.m[2 * Matrix4x4.size + 0] * m.m[3 * Matrix4x4.size + 3] - m.m[2 * Matrix4x4.size + 3] * m.m[3 * Matrix4x4.size + 0] ;
+        var A0223 = m.m[2 * Matrix4x4.size + 0] * m.m[3 * Matrix4x4.size + 2] - m.m[2 * Matrix4x4.size + 2] * m.m[3 * Matrix4x4.size + 0] ;
+        var A0123 = m.m[2 * Matrix4x4.size + 0] * m.m[3 * Matrix4x4.size + 1] - m.m[2 * Matrix4x4.size + 1] * m.m[3 * Matrix4x4.size + 0] ;
+        var A2313 = m.m[1 * Matrix4x4.size + 2] * m.m[3 * Matrix4x4.size + 3] - m.m[1 * Matrix4x4.size + 3] * m.m[3 * Matrix4x4.size + 2] ;
+        var A1313 = m.m[1 * Matrix4x4.size + 1] * m.m[3 * Matrix4x4.size + 3] - m.m[1 * Matrix4x4.size + 3] * m.m[3 * Matrix4x4.size + 1] ;
+        var A1213 = m.m[1 * Matrix4x4.size + 1] * m.m[3 * Matrix4x4.size + 2] - m.m[1 * Matrix4x4.size + 2] * m.m[3 * Matrix4x4.size + 1] ;
+        var A2312 = m.m[1 * Matrix4x4.size + 2] * m.m[2 * Matrix4x4.size + 3] - m.m[1 * Matrix4x4.size + 3] * m.m[2 * Matrix4x4.size + 2] ;
+        var A1312 = m.m[1 * Matrix4x4.size + 1] * m.m[2 * Matrix4x4.size + 3] - m.m[1 * Matrix4x4.size + 3] * m.m[2 * Matrix4x4.size + 1] ;
+        var A1212 = m.m[1 * Matrix4x4.size + 1] * m.m[2 * Matrix4x4.size + 2] - m.m[1 * Matrix4x4.size + 2] * m.m[2 * Matrix4x4.size + 1] ;
+        var A0313 = m.m[1 * Matrix4x4.size + 0] * m.m[3 * Matrix4x4.size + 3] - m.m[1 * Matrix4x4.size + 3] * m.m[3 * Matrix4x4.size + 0] ;
+        var A0213 = m.m[1 * Matrix4x4.size + 0] * m.m[3 * Matrix4x4.size + 2] - m.m[1 * Matrix4x4.size + 2] * m.m[3 * Matrix4x4.size + 0] ;
+        var A0312 = m.m[1 * Matrix4x4.size + 0] * m.m[2 * Matrix4x4.size + 3] - m.m[1 * Matrix4x4.size + 3] * m.m[2 * Matrix4x4.size + 0] ;
+        var A0212 = m.m[1 * Matrix4x4.size + 0] * m.m[2 * Matrix4x4.size + 2] - m.m[1 * Matrix4x4.size + 2] * m.m[2 * Matrix4x4.size + 0] ;
+        var A0113 = m.m[1 * Matrix4x4.size + 0] * m.m[3 * Matrix4x4.size + 1] - m.m[1 * Matrix4x4.size + 1] * m.m[3 * Matrix4x4.size + 0] ;
+        var A0112 = m.m[1 * Matrix4x4.size + 0] * m.m[2 * Matrix4x4.size + 1] - m.m[1 * Matrix4x4.size + 1] * m.m[2 * Matrix4x4.size + 0] ;
+
+        var det = m.m[0 * Matrix4x4.size + 0] * ( m.m[1 * Matrix4x4.size + 1] * A2323 - m.m[1 * Matrix4x4.size + 2] * A1323 + m.m[1 * Matrix4x4.size + 3] * A1223 ) 
+        - m.m[0 * Matrix4x4.size + 1] * ( m.m[1 * Matrix4x4.size + 0] * A2323 - m.m[1 * Matrix4x4.size + 2] * A0323 + m.m[1 * Matrix4x4.size + 3] * A0223 ) 
+        + m.m[0 * Matrix4x4.size + 2] * ( m.m[1 * Matrix4x4.size + 0] * A1323 - m.m[1 * Matrix4x4.size + 1] * A0323 + m.m[1 * Matrix4x4.size + 3] * A0123 ) 
+        - m.m[0 * Matrix4x4.size + 3] * ( m.m[1 * Matrix4x4.size + 0] * A1223 - m.m[1 * Matrix4x4.size + 1] * A0223 + m.m[1 * Matrix4x4.size + 2] * A0123 ) ;
+        
+        //System.out.println("Det : " + det);
+
+        det = 1 / det;
+
+        //CHECK DEL DEL DETERMINANTE DIVERSO DA 0
+
+        final float[] qw = new float[Matrix4x4.size * Matrix4x4.size];
+    
+        qw[0 * Matrix4x4.size + 0] = det *   ( m.m[1 * Matrix4x4.size + 1] * A2323 - m.m[1 * Matrix4x4.size + 2] * A1323 + m.m[1 * Matrix4x4.size + 3] * A1223 );
+        qw[0 * Matrix4x4.size + 1] = det * - ( m.m[0 * Matrix4x4.size + 1] * A2323 - m.m[0 * Matrix4x4.size + 2] * A1323 + m.m[0 * Matrix4x4.size + 3] * A1223 );
+        qw[0 * Matrix4x4.size + 2] = det *   ( m.m[0 * Matrix4x4.size + 1] * A2313 - m.m[0 * Matrix4x4.size + 2] * A1313 + m.m[0 * Matrix4x4.size + 3] * A1213 );
+        qw[0 * Matrix4x4.size + 3] = det * - ( m.m[0 * Matrix4x4.size + 1] * A2312 - m.m[0 * Matrix4x4.size + 2] * A1312 + m.m[0 * Matrix4x4.size + 3] * A1212 );
+        qw[1 * Matrix4x4.size + 0] = det * - ( m.m[1 * Matrix4x4.size + 0] * A2323 - m.m[1 * Matrix4x4.size + 2] * A0323 + m.m[1 * Matrix4x4.size + 3] * A0223 );
+        qw[1 * Matrix4x4.size + 1] = det *   ( m.m[0 * Matrix4x4.size + 0] * A2323 - m.m[0 * Matrix4x4.size + 2] * A0323 + m.m[0 * Matrix4x4.size + 3] * A0223 );
+        qw[1 * Matrix4x4.size + 2] = det * - ( m.m[0 * Matrix4x4.size + 0] * A2313 - m.m[0 * Matrix4x4.size + 2] * A0313 + m.m[0 * Matrix4x4.size + 3] * A0213 );
+        qw[1 * Matrix4x4.size + 3] = det *   ( m.m[0 * Matrix4x4.size + 0] * A2312 - m.m[0 * Matrix4x4.size + 2] * A0312 + m.m[0 * Matrix4x4.size + 3] * A0212 );
+        qw[2 * Matrix4x4.size + 0] = det *   ( m.m[1 * Matrix4x4.size + 0] * A1323 - m.m[1 * Matrix4x4.size + 1] * A0323 + m.m[1 * Matrix4x4.size + 3] * A0123 );
+        qw[2 * Matrix4x4.size + 1] = det * - ( m.m[0 * Matrix4x4.size + 0] * A1323 - m.m[0 * Matrix4x4.size + 1] * A0323 + m.m[0 * Matrix4x4.size + 3] * A0123 );
+        qw[2 * Matrix4x4.size + 2] = det *   ( m.m[0 * Matrix4x4.size + 0] * A1313 - m.m[0 * Matrix4x4.size + 1] * A0313 + m.m[0 * Matrix4x4.size + 3] * A0113 );
+        qw[2 * Matrix4x4.size + 3] = det * - ( m.m[0 * Matrix4x4.size + 0] * A1312 - m.m[0 * Matrix4x4.size + 1] * A0312 + m.m[0 * Matrix4x4.size + 3] * A0112 );
+        qw[3 * Matrix4x4.size + 0] = det * - ( m.m[1 * Matrix4x4.size + 0] * A1223 - m.m[1 * Matrix4x4.size + 1] * A0223 + m.m[1 * Matrix4x4.size + 2] * A0123 );
+        qw[3 * Matrix4x4.size + 1] = det *   ( m.m[0 * Matrix4x4.size + 0] * A1223 - m.m[0 * Matrix4x4.size + 1] * A0223 + m.m[0 * Matrix4x4.size + 2] * A0123 );
+        qw[3 * Matrix4x4.size + 2] = det * - ( m.m[0 * Matrix4x4.size + 0] * A1213 - m.m[0 * Matrix4x4.size + 1] * A0213 + m.m[0 * Matrix4x4.size + 2] * A0113 );
+        qw[3 * Matrix4x4.size + 3] = det *   ( m.m[0 * Matrix4x4.size + 0] * A1212 - m.m[0 * Matrix4x4.size + 1] * A0212 + m.m[0 * Matrix4x4.size + 2] * A0112 );
+
+
+        return Matrix4x4.makeTranspose(new Matrix4x4(qw));
+    }
+
 
     public static Matrix4x4 makeTranspose(final Matrix4x4 a)
     {
@@ -276,4 +337,17 @@ public final class Matrix4x4
     }
 
     //************************** FINE METODI STATIC PER LA CREAZIONE DI MATRICI **************************  */
+
+
+    public static void printMatrix(final Matrix4x4 m)
+    {
+        for (int i = 0; i < Matrix4x4.size; ++i)
+        {
+            for (int j = 0; j < Matrix4x4.size; ++j)
+            {
+                System.out.print(m.m[i * Matrix4x4.size + j] + " ");
+            }
+            System.out.println();
+        }
+    }
 }

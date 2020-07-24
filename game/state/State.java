@@ -36,12 +36,18 @@ public abstract class State
     }
 
 
+    public Engine getEngine()
+    {
+        return engine;
+    }
+
+
 
     //********************* METODI DA IMPLEMENTARE DA PARTE DELLE CLASSI CHE EREDITANO ********************** */
 
-    public abstract void updateState(double elapsedTime, Graphics g);
+    public abstract void updateLogicState(double elapsedTime);
     
-    //public abstract void render(Graphics g);
+    public abstract void render(Graphics g);
 
 
 }

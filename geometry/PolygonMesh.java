@@ -63,5 +63,14 @@ public final class PolygonMesh
     public List<Triangle> getMesh()
     {
         return mesh;
-    }
+	}
+	
+
+	public void printMesh()
+	{
+		for (Triangle t : mesh)
+		{
+			t.print();
+		}
+	}
 }

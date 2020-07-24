@@ -90,7 +90,7 @@ public class TransformSystem implements ComponentSystem
         //QUESTO NON SI PUò PARALLELIZZARE
         //Utilizzo approssimazione di Eulero per simulare le 3 leggi di Newton.
         IntStream.range(0, size).filter(index -> 
-        positions.get(index).getState()
+        masses.get(index).getState()
         ).forEach(index -> 
         {
             updateForce(index);
@@ -256,15 +256,7 @@ public class TransformSystem implements ComponentSystem
                 forces.add(new ForceComponent());
             }
             size = positions.size();
-        }
-
-        //Attivo i componenti.
-        positions.get(id).activateComponent();
-        velocities.get(id).activateComponent();
-        accelerations.get(id).activateComponent();
-        masses.get(id).activateComponent();
-        forces.get(id).activateComponent();
-        
+        }        
 
         //Registro i componenti all'interno dell'entità.
         e.registerComponent(PositionComponent.class, positions.get(id));
@@ -274,5 +266,25 @@ public class TransformSystem implements ComponentSystem
         e.registerComponent(ForceComponent.class, forces.get(id));
     }
 
+    @Override
+    public void activateComponent(EntityRef e)
+    {
+        int id = e.getID();
+
+        //Attivo i componenti.
+        positions.get(id).activateComponent();
+        velocities.get(id).activateComponent();
+        accelerations.get(id).activateComponent();
+        masses.get(id).activateComponent();
+        forces.get(id).activateComponent();
+    }
+
     /******************************** FINE INTERFACCIA COMPONENT SYSTEM ************************************* */
+
+
+    public ArrayList<PositionComponent> getPositions()
+    {
+        return positions;
+    }
+
 }
