@@ -10,10 +10,10 @@ public class ForceComponent extends Component
     dei motori di una navicella e soprattutto un aumento graduale della spinta. Gli altri oggetti non faranno uso di questa variabile
     poiché la forza verrà calcolata come forza di gravità tra i vari corpi presenti.
     */
-    public int maxForceValue = 1000; 
+    //public int maxForceValue = 1000; 
 
     //Di quanti newton aumenta ogni t.
-    //public int forceStep = 100;
+    public int forceStep = 1000;
     
     public Vector4D force = new Vector4D();    
 
@@ -22,6 +22,7 @@ public class ForceComponent extends Component
     {
         System.out.println("ForceComponent");
         force.print();
-        System.out.println("maxForceValue: " + maxForceValue);
+        System.out.println("forceStep: " + forceStep);
+        //System.out.println("maxForceValue: " + maxForceValue);
     }
 }

@@ -6,16 +6,18 @@ import framework3d.geometry.*;
 public class ForceAction implements ActionInterface
 {
     private ForceComponent force;
+    private Vector4D direction;
 
-    public ForceAction(ForceComponent f)
+    public ForceAction(ForceComponent f, Vector4D direction)
     {
         force = f;
+        this.direction = direction;
     }
 
     @Override
     public void executeAction()
     {
-        force.force.add(new Vector4D(0.0f, 0.0f, -100));
+        force.force.add(Vector4D.multiplyByScalar(direction, force.forceStep));
         // System.out.println("Update force: ");
         // force.force.print();
     }

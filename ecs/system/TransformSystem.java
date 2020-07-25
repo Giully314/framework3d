@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 
 import framework3d.ecs.entity.EntityRef;
+import framework3d.geometry.Matrix4x4;
 import framework3d.geometry.Vector4D;
 import framework3d.ecs.component.Component;
 import framework3d.ecs.component.ForceComponent;
@@ -222,7 +223,9 @@ public class TransformSystem implements ComponentSystem
             
         }
         //Sommo tutte le forze
-        fTot.force.add(f.force);
+
+        Vector4D w = Matrix4x4.multiplyByVector(p.rotation, f.force);
+        fTot.force.add(w);
         
         // System.out.print(index + ": ");
         // fTot.force.print();
