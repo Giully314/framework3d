@@ -12,13 +12,11 @@ import java.awt.event.KeyEvent;
 import framework3d.game.state.*;
 import framework3d.ecs.*;
 import framework3d.ecs.action.ActionInterface;
-import framework3d.ecs.component.InputComponent;
-import framework3d.ecs.component.MeshComponent;
-import framework3d.ecs.component.PositionComponent;
-import framework3d.ecs.component.VelocityComponent;
+import framework3d.ecs.action.ForceAction;
+import framework3d.ecs.component.*;
 import framework3d.ecs.entity.*;
-import framework3d.ecs.system.InputSystem;
-import framework3d.ecs.system.RenderingSystem;
+import framework3d.ecs.system.*;
+
 
 import framework3d.geometry.*;
 import framework3d.utility.FrameRate;
@@ -58,6 +56,7 @@ public class GameHandler implements Runnable
     
     private EntityRef ship;
     private EntityRef camera;
+    private EntityRef star;
     private float angle;
 
     /**************************** */
@@ -95,32 +94,46 @@ public class GameHandler implements Runnable
         ship = engine.entityCreate();
 
         angle = 0.0f;
-
+        ForceComponent shipForce = ship.getComponent(ForceComponent.class);
         InputComponent shipInput = ship.getComponent(InputComponent.class);
         shipInput.input.put(KeyEvent.VK_W, "forward");
-        shipInput.output.put("forward", () -> System.out.println("ciaoo"));
+        shipInput.output.put("forward", new ForceAction(shipForce));
 
+        //setup dei componenti transform
         PositionComponent shipPosition = ship.getComponent(PositionComponent.class);
-        shipPosition.position = new Vector4D(0.0f, 0.0f, -15.0f, 1.0f);
+        shipPosition.position = new Vector4D(0.0f, 0.0f, -10.0f, 1.0f);
+
+        MassComponent shipMass = ship.getComponent(MassComponent.class);
+        shipMass.mass = 50000;
 
         //Questo passaggio è da automatizzare con una funzione
         MeshComponent shipMesh = ship.getComponent(MeshComponent.class);
         shipMesh.mesh = new PolygonMesh("C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\spaceship.obj");
-        shipMesh.mesh.printMesh();
         engine.activateAllComponents(ship);
+        
+
+        //Creazione stella
+        star = engine.entityCreate();
+        PositionComponent starPosition = star.getComponent(PositionComponent.class);
+        MassComponent starMass = star.getComponent(MassComponent.class);
+        starPosition.position = new Vector4D(0, 0, -30);
+        starMass.mass = 10000000000000L;
+
+        engine.activateAllComponents(star);
+        star.getComponent(MeshComponent.class).deactivateComponent();
 
         
         //Inizializzazione camera principale
         camera = engine.entityCreate();
 
-        //setup della camera
+        //setup della camera (stesse caratteristiche della navicella? (componenti transform))
 
 
         //Collegamento camera navicella attraverso input component.
 
-        camera.getComponent(PositionComponent.class).position = new Vector4D(0.0f, 0.0f, 0.0f, 1.0f);
+        camera.getComponent(PositionComponent.class).position = new Vector4D(10.0f, 0.0f, 0.0f, 1.0f);
 
-        engine.activateAllComponents(camera);
+        //engine.activateAllComponents(camera);
 
         //Registrazione risorse sistemi. (camera, entità ecc)
         RenderingSystem r = engine.getSystem(RenderingSystem.class);
@@ -215,10 +228,10 @@ public class GameHandler implements Runnable
                 //update e render
                 update(nsPerFrame/1.0E09);
 
-                render();
-
+                
                 --elapsedTime;
             }
+            render();
         }
 
         stop();
@@ -234,10 +247,12 @@ public class GameHandler implements Runnable
         if (State.getState() != null)
         {
             State.getState().updateLogicState(elapsedTime);
+            //State.getState().getEngine().getSystem(TransformSystem.class).printEntities();
         }
         
-        angle += 1.0f * elapsedTime;
-        ship.getComponent(PositionComponent.class).rotation = Matrix4x4.makeRotationY(angle);
+        
+        // angle += 2.0f * elapsedTime;
+        // ship.getComponent(PositionComponent.class).rotation = Matrix4x4.makeRotationY(angle);
     }
 
 

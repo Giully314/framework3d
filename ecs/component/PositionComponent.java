@@ -15,4 +15,10 @@ public class PositionComponent extends Component
         position.print();
         System.out.println("Da stampare la matrice");
     }
+
+    @Override 
+    public void executeAction()
+    {
+        
+    }
 }

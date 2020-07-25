@@ -43,21 +43,25 @@ public class WindowHandler
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
+        frame.setLocationByPlatform(true);
+        
         initializeCanvas();
-
+        
         frame.add(screen);
         frame.pack();
-
+        
+        frame.setVisible(true);
         screen.createBufferStrategy(3);
+        
+        screen.requestFocus();
     }
 
     //Da rivedere cosa fanno le funzioni 
     private void initializeCanvas()
     {
         screen = new Canvas();
+        //screen.setBackground();
+        screen.setIgnoreRepaint(true);
         var dimension = new Dimension(width, height);
         screen.setPreferredSize(dimension);
         screen.setMaximumSize(dimension);

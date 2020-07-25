@@ -89,43 +89,62 @@ public class TransformSystem implements ComponentSystem
 
         //QUESTO NON SI PUò PARALLELIZZARE
         //Utilizzo approssimazione di Eulero per simulare le 3 leggi di Newton.
-        IntStream.range(0, size).filter(index -> 
-        masses.get(index).getState()
-        ).forEach(index -> 
-        {
-            updateForce(index);
-        }
-        );
+        // IntStream.range(0, size).filter(index -> 
+        // masses.get(index).getState()
+        // ).forEach(index -> 
+        // {
+        //     updateForce(index);
+        // }
+        // );
 
         
-        //DA PARALLELIZZARE TUTTI E 3
-        IntStream.range(0, size).filter(index -> 
-           positions.get(index).getState()
-        ).forEach(index -> 
+        // //DA PARALLELIZZARE TUTTI E 3
+        // IntStream.range(0, size).filter(index -> 
+        //    masses.get(index).getState()
+        // ).forEach(index -> 
+        // {
+        //     updateAcceleration(accelerations.get(index), forces.get(index), masses.get(index));
+        // }
+        // );
+
+
+        // IntStream.range(0, size).filter(index -> 
+        //    accelerations.get(index).getState()
+        // ).forEach(index -> 
+        // {
+        //     updateVelocity(velocities.get(index), accelerations.get(index), elapsedTime);
+        // }
+        // );
+
+
+        // IntStream.range(0, size).filter(index -> 
+        //    positions.get(index).getState()
+        // ).forEach(index ->  
+        // {
+        //     updatePosition(positions.get(index), velocities.get(index), elapsedTime);
+        // }
+        // );
+
+        for (int i = 0; i < size; ++i)
         {
-            updateAcceleration(accelerations.get(index), forces.get(index), masses.get(index));
+            PositionComponent p = positions.get(i);
+            VelocityComponent v = velocities.get(i);
+            AccelerationComponent a = accelerations.get(i);
+            ForceComponent f = forces.get(i);
+            MassComponent m = masses.get(i);
+
+            if (!p.getState() || !v.getState() || !a.getState() || !f.getState() || !m.getState())
+            {
+                //System.out.println("ciaoo " + i);
+                continue;
+            }
+            updateForce(i);
+            updateVelocity(v, a, elapsedTime);
+            updatePosition(p, v, elapsedTime);
         }
-        );
-
-
-        IntStream.range(0, size).filter(index -> 
-           positions.get(index).getState()
-        ).forEach(index -> 
-        {
-            updateVelocity(velocities.get(index), accelerations.get(index), elapsedTime);
-        }
-        );
-
-
-        IntStream.range(0, size).filter(index -> 
-           positions.get(index).getState()
-        ).forEach(index -> 
-        {
-            updatePosition(positions.get(index), velocities.get(index), elapsedTime);
-        }
-        );
     }
 
+    //da cambiare e passargli solo l'indice
     /******************************************* EQUAZIONI DEL MOTO ****************************** */
     private void updateVelocity(VelocityComponent v, AccelerationComponent a, double elapsedTime)
     {
@@ -135,6 +154,12 @@ public class TransformSystem implements ComponentSystem
 
     private void updatePosition(PositionComponent p, VelocityComponent v, double elapsedTime)
     {
+        // PositionComponent p = positions.get(index);
+        // VelocityComponent v = velocities.get(index);
+        
+        // //Controllo che i componenti siano attivi
+        // if (!p.getState() || v.getState()) return;
+
         p.position.add(Vector4D.multiplyByScalar(v.velocity, (float)elapsedTime));
     }
 
@@ -142,6 +167,12 @@ public class TransformSystem implements ComponentSystem
     private void updateAcceleration(AccelerationComponent a, ForceComponent f, MassComponent m)
     {
         //CHECK SE MASSA != 0
+        // AccelerationComponent a = accelerations.get(index);
+        // ForceComponent f = forces.get(index);
+        // MassComponent m = masses.get(index);
+
+        // if (!a.getState() || !f.getState() || !m.getState()) return;
+
         a.acceleration = Vector4D.multiplyByScalar(f.force, 1.0f / m.mass);
     }
 
@@ -150,36 +181,54 @@ public class TransformSystem implements ComponentSystem
     private void updateForce(int index)
     {
         PositionComponent p = positions.get(index);
-        ForceComponent f = forces.get(index);
         MassComponent m = masses.get(index);
+        ForceComponent f = forces.get(index);
+        AccelerationComponent a = accelerations.get(index);
 
-        f.force.reset();
+        if (!p.getState() || !m.getState() || !f.getState() || !a.getState()) return;
 
+        ForceComponent fTot = new ForceComponent();
+        //f.force.reset();
+
+        //Calcolo attrazione dei corpi
         for (int i = 0; i < size; ++i)
         {
             if (i == index) continue;
             
             PositionComponent p2 = positions.get(i);
-            
-            if (!p2.getState()) continue;
-
             MassComponent m2 = masses.get(i);
+            
+            if (!p2.getState() || !m2.getState()) continue;
 
-
-            double w = m.mass * m2.mass * (float)gravitationalCostant;
             Vector4D diffPosition = Vector4D.sub(p2.position, p.position);
             // System.out.println(index);
             // diffPosition.print();
             double distance = diffPosition.length();
-            double sqrdDistance = Math.pow(diffPosition.length(), 2.0);   
-
-            diffPosition.normalize();
-
-            if (sqrdDistance != 0)
+            
+            if (distance == 0)
             {
-                f.force.add(Vector4D.multiplyByScalar(diffPosition, (float)w / (float)distance));
-            }   
+                System.out.println("eccoci qui " + index);
+                continue;
+            }
+            
+            double sqrdDistance = Math.pow(diffPosition.length(), 2.0);   
+            
+            
+            double w = m.mass * m2.mass * (float)gravitationalCostant;
+            
+            
+            diffPosition.normalize();
+            fTot.force.add(Vector4D.multiplyByScalar(diffPosition, (float)w / (float)sqrdDistance));
+            
         }
+        //Sommo tutte le forze
+        fTot.force.add(f.force);
+        
+        // System.out.print(index + ": ");
+        // fTot.force.print();
+        // System.out.println();
+
+        updateAcceleration(a, fTot, m);
     }   
 
     /******************************************* FINE EQUAZIONI DEL MOTO ****************************** */

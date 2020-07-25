@@ -33,4 +33,9 @@ public abstract class Component
     {
         return state;
     }
+
+    public void executeAction()
+    {
+        
+    } 
 }

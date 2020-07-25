@@ -79,7 +79,7 @@ public class WorldEngine implements Engine
     {
         inputSystem.processRawInput();
 
-        //transformSystem.simulate(elapsedTime);
+        transformSystem.simulate(elapsedTime);
     }
 
 
