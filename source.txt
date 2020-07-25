@@ -3,6 +3,8 @@ C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\Engine.jav
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\WorldEngine.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\ActionInterface.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\ForceAction.java
+C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\RotationXAction.java
+C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\RotationYAction.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\component\AccelerationComponent.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\component\Component.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\component\ForceComponent.java

@@ -98,8 +98,18 @@ public class GameHandler implements Runnable
         //Setup input
         String forward = new String("forward");
         String backwards = new String("backwards");
+
         String yawRight = new String("yawRight");
         String yawLeft = new String("yawLeft");
+
+        String pitchDown = new String("pitchDown");
+        String pitchUp = new String("pitchUp");
+
+        String rollRight = new String("rollRight");
+        String rollLeft = new String("rollLeft");
+
+        float step = 0.01f;
+
 
         ForceComponent shipForce = ship.getComponent(ForceComponent.class);
         InputComponent shipInput = ship.getComponent(InputComponent.class);
@@ -115,10 +125,22 @@ public class GameHandler implements Runnable
         shipInput.output.put(backwards, new ForceAction(shipForce, new Vector4D(0, 0, 1)));
 
         shipInput.input.put(KeyEvent.VK_A, yawLeft);
-        shipInput.output.put(yawLeft, new RotationYAction(shipPosition, 0.01f));
+        shipInput.output.put(yawLeft, new RotationYAction(shipPosition, step));
 
         shipInput.input.put(KeyEvent.VK_D, yawRight);
-        shipInput.output.put(yawRight, new RotationYAction(shipPosition, -0.01f));
+        shipInput.output.put(yawRight, new RotationYAction(shipPosition, -step));
+
+        shipInput.input.put(KeyEvent.VK_UP, pitchDown);
+        shipInput.output.put(pitchDown, new RotationXAction(shipPosition, step));
+
+        shipInput.input.put(KeyEvent.VK_DOWN, pitchUp);
+        shipInput.output.put(pitchUp, new RotationXAction(shipPosition, -step));
+
+        shipInput.input.put(KeyEvent.VK_RIGHT, rollRight);
+        shipInput.output.put(rollRight, new RotationZAction(shipPosition, step));
+
+        shipInput.input.put(KeyEvent.VK_LEFT, rollLeft);
+        shipInput.output.put(rollLeft, new RotationZAction(shipPosition, -step));
 
 
         //setup dei componenti transform
