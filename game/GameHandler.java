@@ -156,7 +156,7 @@ public class GameHandler implements Runnable
 
         
         //Load ship mesh
-        r.loadMesh(ship, "C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\spaceship.obj");
+        r.loadMesh(ship, "C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\framework3d\\resource\\spaceship.obj");
 
         engine.activateAllComponents(ship);
         
@@ -170,7 +170,7 @@ public class GameHandler implements Runnable
         starMass.mass = 1000000000;
         starPosition.position.add(new Vector4D(0, 0, -30));
 
-        r.loadMesh(star, "C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\sphere.obj");
+        r.loadMesh(star, "C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\framework3d\\resource\\sphere.obj");
         
 
         engine.activateAllComponents(star);
