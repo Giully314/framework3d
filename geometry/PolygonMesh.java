@@ -9,13 +9,13 @@ public final class PolygonMesh
 	//rendere arraylist
     private final List<Triangle> mesh;
 
-    public PolygonMesh(String filename)
+    public PolygonMesh(String filename, Color c)
     {
-        mesh = Collections.unmodifiableList(loadObject(filename));
+        mesh = Collections.unmodifiableList(loadObject(filename, c));
     }
 
 
-    private ArrayList<Triangle> loadObject(String fileName)
+    private ArrayList<Triangle> loadObject(String fileName, Color c)
 	{
 		ArrayList<Triangle> m = new ArrayList<>();
 		//Path p = Paths.get("..\\..\\resource\\".concat(fileName));
@@ -47,8 +47,7 @@ public final class PolygonMesh
 					Vector4D w = vertices.get(Integer.parseInt(lineSplitted[2]) - 1);
 					Vector4D e = vertices.get(Integer.parseInt(lineSplitted[3]) - 1);
 					
-					//colore da passare a load mesh per impostarlo
-					m.add(new Triangle(q, w, e, Color.GRAY));
+					m.add(new Triangle(q, w, e, c));
 				}
 				
 			}

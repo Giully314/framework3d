@@ -16,6 +16,10 @@ import framework3d.ecs.component.*;
 import framework3d.ecs.entity.*;
 import framework3d.ecs.system.*;
 
+import java.awt.Color;
+
+import java.util.Random;
+
 
 import framework3d.geometry.*;
 import framework3d.utility.FrameRate;
@@ -55,12 +59,35 @@ public class GameHandler implements Runnable
     /************ Entità ********* */
     
     private EntityRef ship;
+    
     private Camera camera;
+    
     private EntityRef star;
-    private float angle;
 
+    private EntityRef[] planets;
+    private int numberOfPlanets;
+    
     /**************************** */
 
+    //******************************* DATI INIZIALI ************************************************* */
+    private final long STAR_MASS = 10000000000000L;
+    private final long PLANET_MASS = 1000000000L;
+    private final long DISTANCE = 150;
+    private final long VELOCITY = 1;
+
+    private final String PLANET_MESH_NAME = new String("framework3d\\resource\\Sphere");
+    private final String[] PLANETS_MESHES = new String[] { "_60.obj", "_112.obj", "_220.obj", "_316.obj", "_374.obj", "_440.obj"};
+    private final Color[] PLANET_COLORS = new Color[] { Color.GRAY, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, 
+                                                            Color.ORANGE, Color.PINK, Color.YELLOW};
+
+
+    private final int updateStars = 1000;
+    private int counter = 1000;
+
+    private int[] starsX = new int[100];
+    private int[] starsY = new int[100];
+    private final int starSize = 3;
+    //******************************************************************************************************* */
 
     public GameHandler(String title, int width, int height)
     {
@@ -86,18 +113,18 @@ public class GameHandler implements Runnable
 
         //Creazione engine e inizializzazione dei sistemi.
         WorldEngine engine = new WorldEngine();
+        TransformSystem t = engine.getSystem(TransformSystem.class);
         RenderingSystem r = engine.getSystem(RenderingSystem.class);
 
-        Vector4D light = new Vector4D(-10, 30, -30);
-        r.setShader(new Shader(light));
+        // Vector4D light = new Vector4D(-10, 30, -30);
+        // r.setShader(new Shader(light));
 
         engine.getSystem(InputSystem.class).registerRawInput(keyboard);
 
 
-        //Inizializzazione entità
+        //Inizializzazione navicella 
         ship = engine.entityCreate();
 
-        angle = 0.0f;
 
         ForceComponent shipForce = ship.getComponent(ForceComponent.class);
         InputComponent shipInput = ship.getComponent(InputComponent.class);
@@ -105,7 +132,7 @@ public class GameHandler implements Runnable
         PositionComponent shipPosition = ship.getComponent(PositionComponent.class);
         MassComponent shipMass = ship.getComponent(MassComponent.class);
 
-        //*************************** Setup input *****************************
+        //*************************** Setup input navicella *****************************
         String forward = new String("forward");
         String backwards = new String("backwards");
 
@@ -118,7 +145,7 @@ public class GameHandler implements Runnable
         String rollRight = new String("rollRight");
         String rollLeft = new String("rollLeft");
 
-        float step = 0.005f;
+        float step = 0.01f;
 
         Vector4D forceForward = new Vector4D(0, 0, -1);
         Vector4D forceBackwards = new Vector4D(0, 0, 1);
@@ -142,52 +169,126 @@ public class GameHandler implements Runnable
         shipInput.output.put(pitchUp, new RotationXAction(shipPosition, -step));
 
         shipInput.input.put(KeyEvent.VK_RIGHT, rollRight);
-        shipInput.output.put(rollRight, new RotationZAction(shipPosition, step));
+        shipInput.output.put(rollRight, new RotationZAction(shipPosition, -step));
 
         shipInput.input.put(KeyEvent.VK_LEFT, rollLeft);
-        shipInput.output.put(rollLeft, new RotationZAction(shipPosition, -step));
+        shipInput.output.put(rollLeft, new RotationZAction(shipPosition, step));
 
         //********************************************************************************** */
 
         //setup dei componenti transform
-        shipPosition.position = new Vector4D(0.0f, 30.0f, -15.0f, 1.0f);
+        shipPosition.position.add(new Vector4D(0, 40.0f, 1500.0f));
 
         shipMass.mass = 50000;
 
         
         //Load ship mesh
-        r.loadMesh(ship, "C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\framework3d\\resource\\spaceship.obj");
+        r.loadMesh(ship, "framework3d\\resource\\spaceship-Z.obj", Color.GRAY);
 
         engine.activateAllComponents(ship);
         
 
-        //Creazione stella
+        /**************************************** FINE SETUP NAVICELLA ************************************************************ */
+
+
+        //**************************************************** Creazione stella *********************************************
         star = engine.entityCreate();
 
         PositionComponent starPosition = star.getComponent(PositionComponent.class);
         MassComponent starMass = star.getComponent(MassComponent.class);
 
-        starMass.mass = 1000000000;
-        starPosition.position.add(new Vector4D(0, 0, -30));
-
-        r.loadMesh(star, "C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\framework3d\\resource\\sphere.obj");
+        starMass.mass = STAR_MASS;
+        starPosition.position.add(new Vector4D(0, 0, 0));
+        
+        r.loadMesh(star, "framework3d\\resource\\sphere.obj", Color.BLUE);
+        star.getComponent(MeshComponent.class).scale.add(new Vector4D(20, 20, 20));
         
 
         engine.activateAllComponents(star);
-
         
+
+        //**************************************** FINE CREAZIONE STELLA ********************************************************** */
+
+
+        //****************************************** CREAZIONE PIANETI ************************************************************* */
+        numberOfPlanets = 150;
+        planets = new EntityRef[numberOfPlanets];
+
+        PositionComponent planetPosition;
+        VelocityComponent planetVelocity;
+        MassComponent planetMass;
+        MeshComponent planetMesh;
+
+        Random rand = new Random();
+        for (int i = 0; i < planets.length; ++i)
+        {
+            planets[i] = engine.entityCreate();
+
+            planetPosition = planets[i].getComponent(PositionComponent.class);
+            planetVelocity = planets[i].getComponent(VelocityComponent.class);
+            planetMass = planets[i].getComponent(MassComponent.class);
+
+            planetMass.mass = (long)(PLANET_MASS * Math.random());
+            
+            float sign1;
+            float sign2;
+            float sign3;
+
+            if (rand.nextBoolean()) sign1 = 1;
+            else sign1 = -1;
+
+            if (rand.nextBoolean()) sign2 = 1;
+            else sign2 = -1;
+
+            if (rand.nextBoolean()) sign3 = 1;
+            else sign3 = -1;
+
+
+
+            planetPosition.position.add(new Vector4D(sign1 * DISTANCE * (i + 1), 
+                sign2 * (int)(Math.random() * DISTANCE * (i + 1)), 
+                sign3 * (int)(Math.random() * DISTANCE * (i + 1))));
+
+
+            planetVelocity.velocity.add(new Vector4D(
+                sign1 * (float)(VELOCITY * Math.random()), 
+                sign2 * (float)(Math.random() * VELOCITY), 
+                sign3 * VELOCITY * (i + 1)));
+
+            r.loadMesh(planets[i], PLANET_MESH_NAME + PLANETS_MESHES[i % PLANETS_MESHES.length], PLANET_COLORS[i % PLANET_COLORS.length]);
+
+            planetMesh = planets[i].getComponent(MeshComponent.class);
+            planetMesh.scale.add(new Vector4D(
+                (float)Math.random() * (i % 20), 
+                (float)Math.random() * (i % 20), 
+                (float)Math.random() * (i % 20)));
+
+            engine.activateAllComponents(planets[i]);
+        }
+
+        planets[10].getComponent(PositionComponent.class).position = new Vector4D(0, 40, 0);
+
+
+        //******************************************* FINE CREAZIONE PIANETI ********************************************** */
+
+
         //Inizializzazione camera principale
         camera = new Camera(ship);
 
-        //setup della camera (stesse caratteristiche della navicella? (componenti transform))
 
-        //Registrazione risorse sistemi. (camera, entità ecc)
+        //Registrazione risorse sistemi. (camera, entità ecc, shader)
         float near;
         float far;
         far = 100;
-        near = far / 1000;
+        near = far / 1000; //divido per 1000 poiché è il rapporto ottimale per garantire una visione grafica "realistica"
         r.createProjectionMatrix(near, far, width, height, 90.0f);
         r.setCamera(camera);
+        r.setShader(new Shader(starPosition.position));
+
+        
+        t.registerEntityCollision(ship);
+        t.registerEntityCollision(star);
+
 
         //Setup del main State.
         gameStatus = new GameState(engine);
@@ -293,7 +394,7 @@ public class GameHandler implements Runnable
             camera.moveCamera();
             //camera.getCameraPosition().print();
             State.getState().updateLogicState(elapsedTime);
-            State.getState().getEngine().getSystem(TransformSystem.class).printEntities();
+            //State.getState().getEngine().getSystem(TransformSystem.class).printEntities();
         }
         
         
@@ -313,7 +414,27 @@ public class GameHandler implements Runnable
                 Graphics g = buffer.getDrawGraphics();
                 
                 //Clear screen
-                g.clearRect(0, 0, width, height);
+                g.setColor(Color.BLACK);
+                g.fillRect(0, 0, width, height);
+
+                g.setColor(Color.WHITE);
+                
+                if (counter == updateStars)
+                {
+                    counter = 0;
+                    for (int i = 0; i < starsX.length; ++i)
+                    {
+                        starsX[i] = (int)(Math.random() * width);
+                        starsY[i] = (int)(Math.random() * height);
+                    }
+                }
+                ++counter;
+
+
+                for (int i = 0; i < starsX.length; ++i)
+                {
+                    g.fillOval(starsX[i], starsY[i], starSize, starSize);
+                }
 
                 if (State.getState() != null)
                 {

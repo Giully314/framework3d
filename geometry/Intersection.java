@@ -48,4 +48,32 @@ public final class Intersection {
 
         return distance < (a.radius + b.radius);
     }
+
+
+    public static Vector4D Vector_IntersectPlane(Vector4D plane_p, Vector4D plane_n, Vector4D lineStart, Vector4D lineEnd)
+    {
+        plane_n.normalize();
+        float plane_d = -Vector4D.dotProduct(plane_n, plane_p);
+        float ad = Vector4D.dotProduct(lineStart, plane_n);
+        float bd = Vector4D.dotProduct(lineEnd, plane_n);
+        float t = (-plane_d - ad) / (bd - ad);
+        Vector4D lineStartToEnd = Vector4D.sub(lineEnd, lineStart);
+        Vector4D lineToIntersect = Vector4D.multiplyByScalar(lineStartToEnd, t);
+
+        return Vector4D.add(lineStart, lineToIntersect);
+    }
+
+    public static Vector4D lineIntersection(Vector4D planePoint, Vector4D planeNormal, Vector4D linePoint, Vector4D lineDirection) 
+    {
+        lineDirection.normalize();
+
+        if (Vector4D.dotProduct(planeNormal, lineDirection) == 0) 
+        {
+            return null;
+        }
+        
+        double s = (Vector4D.dotProduct(planeNormal, planePoint) - Vector4D.dotProduct(planeNormal, linePoint)) / Vector4D.dotProduct(planeNormal, lineDirection);
+
+        return Vector4D.add(linePoint, Vector4D.multiplyByScalar(lineDirection, (float)s));
+    }
 }

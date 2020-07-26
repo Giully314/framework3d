@@ -65,8 +65,6 @@ public class Camera
         cameraPosition.setCoordinate(0, playerPosition.position.getCoordinate(0));
         cameraPosition.setCoordinate(1, playerPosition.position.getCoordinate(1) + verticalDistance);
         cameraPosition.setCoordinate(2, playerPosition.position.getCoordinate(2) + horizontalDistance);
-
-        //yaw = 180 - (playerPosition.angleY + angleAroundPlayer);
     }
 
 

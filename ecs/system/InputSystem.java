@@ -114,7 +114,7 @@ public class InputSystem implements ComponentSystem
 
         if (id >= size)
         {
-            for (int i = 0; i < id - size; ++i)
+            for (int i = 0; i < id - size + 10; ++i)
             {
                 inputs.add(new InputComponent());
             }

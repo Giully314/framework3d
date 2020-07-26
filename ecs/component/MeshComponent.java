@@ -6,7 +6,7 @@ import framework3d.geometry.PolygonMesh;
 public class MeshComponent extends Component
 {   
     public PolygonMesh mesh = null;
-    public Vector4D scale = new Vector4D(2, 2, 2, 1);
+    public Vector4D scale = new Vector4D(2, 2, 2);
 
     @Override
     public void printComponent()

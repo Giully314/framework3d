@@ -13,9 +13,9 @@ public final class Sphere
     public Vector4D position;
     public float radius;
 
-    public Sphere(PositionComponent _p, float _radius)
+    public Sphere(Vector4D _p, float _radius)
     {
-        position = _p.position;
+        position = _p;
         radius = _radius;
     }
 

@@ -4,15 +4,14 @@ import framework3d.ecs.Engine;
 import framework3d.ecs.component.MeshComponent;
 import framework3d.ecs.component.PositionComponent;
 import framework3d.ecs.entity.EntityRef;
-import framework3d.geometry.Matrix4x4;
-import framework3d.geometry.PolygonMesh;
-import framework3d.geometry.Triangle;
-import framework3d.geometry.Vector4D;
+import framework3d.geometry.*;
 import framework3d.utility.camera.Camera;
 
 import java.awt.Graphics;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.List;
+
+import java.awt.Color;
 
 /*
 La fase di rendering è divisa in 5 step:
@@ -25,6 +24,9 @@ public class RenderingSystem implements ComponentSystem
     private Engine engine;
     private int size;
     private Camera camera;
+
+    private int width;
+    private int height;
 
     private ArrayList<MeshComponent> meshes;
 
@@ -63,6 +65,9 @@ public class RenderingSystem implements ComponentSystem
 
         //da controllare origine x e y
         viewportMatrix = Matrix4x4.makeViewport(0, 0, near, far, width, height);
+
+        this.width = width;
+        this.height = height;
     }
 
 
@@ -118,51 +123,76 @@ public class RenderingSystem implements ComponentSystem
 
                 if (Vector4D.dotProduct(transformed.getNormal(), visible) > 0)
                 {
+                    //luce
+                    
+                    /******************************** shader *********************************************** */
+                    
+                    //shader.shader(transformed);
+                    
+
+                    /************************************************************************************** */
+
+
                     //*********************dal world space al camera space ******************************** */
                 
                     transformed = Matrix4x4.multiplyByTriangle(view, transformed);
 
                     /********************************************************************************** */
 
-                    /******************************** shader *********************************************** */
-                    
-                    shader.shader(transformed);
-                    
 
-                    /************************************************************************************** */
+                    /*********************************** clipping ************************** */
+
+                    //int nClipped = 0;
+                    Triangle[] clipped = new Triangle[2];
+                    clipped[0] = new Triangle();
+                    clipped[1] = new Triangle();
+
+                    clipped[0].setColor(transformed.getColor());
+                    clipped[1].setColor(transformed.getColor());
+
+                    //il primo vettore deve avere componente near plane
+                    Triangle[] w = ClipAgainstPlane(new Vector4D(0, 0, -0.1f ), 
+                    new Vector4D(0, 0, -1), transformed);
+ 
+                    //System.out.println("w: " + w.length);
+
+                    /*********************************************************************** */
 
                     /************************* projection space *************************************** */
-                    transformed = Matrix4x4.multiplyByTriangle(projectionMatrix, transformed);
+                    for (int j = 0; j < w.length; ++j)
+                    {
+                        transformed = Matrix4x4.multiplyByTriangle(projectionMatrix, w[j]);
                     
-                    transformed.normalizeByW();
+                        transformed.normalizeByW();
 
-                    //NOTA IMPORTANTE 
-                    //x e y forse sono invertite, reinvertirle moltiplicando per -1.
-                    //farlo nella matrice viewport. check glViewport
-                    //System.out.println("RENDERING SYSTEM DOPO PROJECTION MATRIX, NOTA");
+                        //NOTA IMPORTANTE 
+                        //x e y forse sono invertite, reinvertirle moltiplicando per -1.
+                        //farlo nella matrice viewport. check glViewport
+                        //System.out.println("RENDERING SYSTEM DOPO PROJECTION MATRIX, NOTA");
 
-                    transformed.clearW();
+                        transformed.clearW();
 
-                    Vector4D p1 = transformed.getVertex(0);
-                    Vector4D p2 = transformed.getVertex(1);
-                    Vector4D p3 = transformed.getVertex(2);
+                        Vector4D p1 = transformed.getVertex(0);
+                        Vector4D p2 = transformed.getVertex(1);
+                        Vector4D p3 = transformed.getVertex(2);
 
-                    p1.setCoordinate(0, p1.getCoordinate(0) * -1);
-                    p1.setCoordinate(1, p1.getCoordinate(1) * -1);
+                        //p1.setCoordinate(0, p1.getCoordinate(0) * -1);
+                        p1.setCoordinate(1, p1.getCoordinate(1) * -1);
 
-                    p2.setCoordinate(0, p2.getCoordinate(0) * -1);
-                    p2.setCoordinate(1, p2.getCoordinate(1) * -1);
+                        //p2.setCoordinate(0, p2.getCoordinate(0) * -1);
+                        p2.setCoordinate(1, p2.getCoordinate(1) * -1);
 
-                    p3.setCoordinate(0, p3.getCoordinate(0) * -1);
-                    p3.setCoordinate(1, p3.getCoordinate(1) * -1);
+                        //p3.setCoordinate(0, p3.getCoordinate(0) * -1);
+                        p3.setCoordinate(1, p3.getCoordinate(1) * -1);
 
 
 
-                    transformed = Matrix4x4.multiplyByTriangle(viewportMatrix, transformed);
-                    
-                    /********************************************************************************* */
+                        transformed = Matrix4x4.multiplyByTriangle(viewportMatrix, transformed);
+                        
+                        /********************************************************************************* */
 
-                    buffer.add(transformed);
+                        buffer.add(transformed);
+                    }
                 }
             }
 
@@ -176,7 +206,50 @@ public class RenderingSystem implements ComponentSystem
 			float z2 = (t2.t[0].v[2] + t2.t[1].v[2] + t2.t[2].v[2]) / 3.0f;
             
 			return -Float.compare(z1, z2);
-		});
+        });
+
+        //Clipping su i 4 lati dello schermo.
+        for (Triangle t : out)
+        {
+            ArrayDeque<Triangle> q = new ArrayDeque<>();
+             
+            q.push(t);
+            int newTriangles = 1;
+
+            for (int p = 0; p < 4; ++p)
+            {
+                Triangle[] trisToAdd = new Triangle[0];
+
+                while (newTriangles > 0)
+                {
+                    Triangle test = q.pollFirst();
+                    --newTriangles;
+
+                    switch (p)
+                    {
+                        case 0:
+                            trisToAdd =  ClipAgainstPlane(new Vector4D(), new Vector4D(0,1,0), test);                       
+                            break;
+                        case 1:
+                            trisToAdd =  ClipAgainstPlane(new Vector4D(0, height - 1, 0), new Vector4D(0,-1,0), test);                       
+                            break;
+                        case 2:
+                            trisToAdd =  ClipAgainstPlane(new Vector4D(), new Vector4D(1,0,0), test);                       
+                            break;
+                        case 3:
+                            trisToAdd =  ClipAgainstPlane(new Vector4D(width - 1, 0, 0), new Vector4D(-1,0,0), test);                       
+                            break;
+                    }
+
+                    for (int w = 0; w < trisToAdd.length; ++w)
+                    {
+                        q.push(trisToAdd[w]);
+                    }
+                }
+                newTriangles = q.size();
+            }
+        }
+
 
         for (Triangle t : out)
         {
@@ -185,100 +258,117 @@ public class RenderingSystem implements ComponentSystem
         }
     }
 
+    private float distance(Vector4D p, Vector4D plane_n, Vector4D plane_p)
+    {
+        return (plane_n.getCoordinate(0) * p.getCoordinate(0) + plane_n.getCoordinate(1) * p.getCoordinate(1) + 
+                plane_n.getCoordinate(2) * p.getCoordinate(2) - Vector4D.dotProduct(plane_n, plane_p));
+    }
 
-    // private ArrayList<Triangle> fromObjectSpaceToWorldSpace(ArrayList<PositionComponent> positions)
-    // {
-    //     /*
-    //     Da aggiungere scaling della mesh
-    //     */  
-    //     //Da calcolare la capacity giusta
-    //     ArrayList<Triangle> buffer = new ArrayList<>(100);
+    private Triangle[] ClipAgainstPlane(Vector4D planePoint, Vector4D planeNormal, Triangle t)
+    {
+        planePoint.normalize();
 
-    //     //DA PARALLELIZZARE 
-    //     for (int i = 0; i < meshes.size(); ++i)
-    //     {
-    //         PositionComponent p = positions.get(i);
-    //         MeshComponent w = meshes.get(i);
+        Vector4D[] insidePoints = new Vector4D[3];
+        int insideCount = 0;
+
+        Vector4D[] outsidePoints = new Vector4D[3];
+        int outsideCount = 0;
+
+        float d0 = distance(t.getVertex(0), planePoint, planeNormal);
+        float d1 = distance(t.getVertex(1), planePoint, planeNormal);
+        float d2 = distance(t.getVertex(2), planePoint, planeNormal);
+
+        if (d0 >= 0)
+        {
+            insidePoints[insideCount++] = t.getVertex(0);
+        }
+        else
+        {
+            outsidePoints[outsideCount++] = t.getVertex(0);
+        }
+
+        if (d1 >= 0)
+        {
+            insidePoints[insideCount++] = t.getVertex(1);
+        }
+        else
+        {
+            outsidePoints[outsideCount++] = t.getVertex(1);
+        }
+
+        if (d2 >= 0)
+        {
+            insidePoints[insideCount++] = t.getVertex(2);
+        }
+        else
+        {
+            outsidePoints[outsideCount++] = t.getVertex(2);
+        }
+
+        //System.out.println("i: " + insideCount + "  out: " + outsideCount);
+
+        if (insideCount == 0)
+        {
+            return new Triangle[0];
+        }
+
+        if (insideCount == 3)
+        {
+            Triangle[] w = new Triangle[1];
+            w[0] = t;
+            return w;
+        }
+
+        if (insideCount == 1 && outsideCount == 2)
+        {
+            Triangle[] w = new Triangle[1];
+
+            w[0] = Triangle.copy(t);
+
+            w[0].t[0] = insidePoints[0];
+            w[0].t[1] = Intersection.lineIntersection(planePoint, planeNormal, insidePoints[0], outsidePoints[0]);
+            w[0].t[2] = Intersection.lineIntersection(planePoint, planeNormal, insidePoints[0], outsidePoints[1]);
+
+            for (int i= 0; i < 3; ++i)
+            {
+                if (w[0].t[i] == null)
+                {
+                    return new Triangle[0];
+                }
+            }
             
-    //         if (!p.getState() || !w.getState()) continue;
+            return w;
+        }
 
-    //         //scaling dell'oggetto mancante. 
+
+        if (insideCount == 2 && outsideCount == 1)
+        {
+            Triangle[] w = new Triangle[2];
+
+            w[0] = Triangle.copy(t);
+            w[1] = Triangle.copy(t);
             
-    //         // Matrix4x4 transl = Matrix4x4.makeTranslation(p.position.getCoordinate(0), 
-    //         //                                                  p.position.getCoordinate(1), 
-    //         //                                                 p.position.getCoordinate(2));
+            w[0].t[0] = insidePoints[0];
+            w[0].t[1] = insidePoints[1];
+            w[0].t[2] = Intersection.lineIntersection(planePoint, planeNormal, insidePoints[0], outsidePoints[0]);
             
             
-    //         Matrix4x4 world = Matrix4x4.makeAffineTransformation(w.scale, p.rotation, p.position);
-    //         // p.position.print();
-    //         // System.out.println("entity i: " + i );
+            w[1].t[0] = insidePoints[1];
+            w[1].t[1] = w[0].t[2];
+            w[1].t[2] = Intersection.lineIntersection(planePoint, planeNormal, insidePoints[1], outsidePoints[0]);
 
-    //         List<Triangle> m = meshes.get(i).mesh.getMesh();
-    //         ArrayList<Triangle> worldSpaceObject = new ArrayList<>(m.size());
-            
-    //         for (int j = 0; j < m.size(); ++j)
-    //         {
-    //             worldSpaceObject.add(Matrix4x4.multiplyByTriangle(world, m.get(i)));
-    //         }
+            for (int i= 0; i < 3; ++i)
+            {
+                if (w[0].t[i] == null || w[1].t[i] == null)
+                {
+                    return new Triangle[0];
+                }
+            }
+        }
 
-    //         buffer.addAll(worldSpaceObject);
-    //     }
-
-    //     // System.out.println("world space");
-    //     // for (Triangle t : buffer)
-    //     // {
-    //     //     t.print();
-    //     // }
-
-    //     return buffer;
-    // }
-
-    // //Oppure posso salvare il riferimento alla camera all'interno del sistema.
-    // private ArrayList<Triangle> fromWorldSpaceToProjectionSpace(ArrayList<Triangle> buffer)
-    // {
-    //     PositionComponent pc = camera.getComponent(PositionComponent.class);
-      
-    //     Vector4D p = pc.position;
-
-    //     Matrix4x4 cam = Matrix4x4.makeTranslation(p.getCoordinate(0), p.getCoordinate(1), p.getCoordinate(2));
-    //     //Matrix4x4.printMatrix(cam);
-    //     cam = Matrix4x4.multiplication(cam, pc.rotation);
-    //     //Matrix4x4.printMatrix(cam);
-
-    //     Matrix4x4 view = Matrix4x4.makeInverse(cam);
-        
-        
-    //     ArrayList<Triangle> b = new ArrayList<>(buffer.size());
-    //     for (Triangle t : buffer)
-    //     {
-    //         b.add(Matrix4x4.multiplyByTriangle(view, t));
-    //     }
-
-    //     Matrix4x4 proj = projectionMatrix;
-        
-    //     buffer.clear();
-    //     for (Triangle t : b)
-    //     {
-    //         Triangle w = Matrix4x4.multiplyByTriangle(proj, t);
-    //         w.normalizeByW();
-
-    //         w.clearW();
-
-    //         w = Matrix4x4.multiplyByTriangle(viewportMatrix, w);
-
-    //         buffer.add(w);
-    //     }
-
-    //     buffer.sort((Triangle t1, Triangle t2) -> 
-	// 	{
-	// 		float z1 = (t1.t[0].v[2] + t1.t[1].v[2] + t1.t[2].v[2]) / 3.0f;
-	// 		float z2 = (t2.t[0].v[2] + t2.t[1].v[2] + t2.t[2].v[2]) / 3.0f;
-            
-	// 		return Float.compare(z1, z2);
-	// 	});
-        
-    //     return buffer;
-    // }
+        return new Triangle[0];
+    }
+    
     
     /******************************** INTERFACCIA COMPONENT SYSTEM ************************************* */
     
@@ -332,12 +422,12 @@ public class RenderingSystem implements ComponentSystem
     /******************************** FINE INTERFACCIA COMPONENT SYSTEM ************************************* */
 
 
-    public void loadMesh(EntityRef e, String meshName)
+    public void loadMesh(EntityRef e, String meshName, Color c)
     {
         int id = e.getID();
         MeshComponent m = meshes.get(id);
 
-        m.mesh = new PolygonMesh(meshName);
+        m.mesh = new PolygonMesh(meshName, c);
     }
 
 

@@ -8,7 +8,9 @@ import java.util.stream.IntStream;
 
 
 import framework3d.ecs.entity.EntityRef;
+import framework3d.geometry.Intersection;
 import framework3d.geometry.Matrix4x4;
+import framework3d.geometry.Sphere;
 import framework3d.geometry.Vector4D;
 import framework3d.ecs.component.Component;
 import framework3d.ecs.component.ForceComponent;
@@ -35,7 +37,7 @@ public class TransformSystem implements ComponentSystem
     private ArrayList<MassComponent> masses;
     private ArrayList<ForceComponent> forces;
 
-
+    private ArrayList<EntityRef> entityCollisions;
     
 
     //HashMap per fast look up 
@@ -57,6 +59,8 @@ public class TransformSystem implements ComponentSystem
         accelerations = new ArrayList<>(size);
         masses = new ArrayList<>(size);
         forces = new ArrayList<>(size);
+
+        entityCollisions = new ArrayList<>();
 
 
         for (int i = 0; i < size; ++i)
@@ -136,13 +140,15 @@ public class TransformSystem implements ComponentSystem
 
             if (!p.getState() || !v.getState() || !a.getState() || !f.getState() || !m.getState())
             {
-                //System.out.println("ciaoo " + i);
                 continue;
             }
             updateForce(i);
             updateVelocity(v, a, elapsedTime);
             updatePosition(p, v, elapsedTime);
         }
+
+
+        checkCollisions();
     }
 
     //da cambiare e passargli solo l'indice
@@ -273,6 +279,31 @@ public class TransformSystem implements ComponentSystem
         }
 
         System.out.println("*************************************************\n\n");
+    }
+
+
+
+    public void registerEntityCollision(EntityRef e1)
+    {
+        entityCollisions.add(e1);
+    }
+
+
+    private void checkCollisions()
+    {
+        for (int i = 0; i < entityCollisions.size(); ++i)
+        {
+            Sphere s = new Sphere(entityCollisions.get(i).getComponent(PositionComponent.class).position, 50);
+            for (int j = i + 1; j < entityCollisions.size(); ++j)
+            {
+                Sphere w = new Sphere(entityCollisions.get(j).getComponent(PositionComponent.class).position, 50);
+
+                if (Intersection.intersect(s, w))
+                {
+                    System.exit(0);
+                }
+            }
+        }
     }
 
 

@@ -27,8 +27,8 @@ public final class Triangle
 
     public Triangle()
     {
-        t = new Vector4D[3];
-        normal = Vector4D.crossProduct(Vector4D.sub(t[1], t[0]), Vector4D.sub(t[2], t[0]));
+        t = new Vector4D[] { new Vector4D(), new Vector4D(), new Vector4D()};
+        //normal = Vector4D.crossProduct(Vector4D.sub(t[1], t[0]), Vector4D.sub(t[2], t[0]));
         color = Color.BLUE;
     }
 
