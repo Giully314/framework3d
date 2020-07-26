@@ -200,6 +200,7 @@ public final class Matrix4x4
         m[1 * Matrix4x4.size + 1] = height / 2;
         m[1 * Matrix4x4.size + 3] = originY + height / 2;
         
+        //Nell'articolo diceva di inserire 1/2, ma in altri articoli consigliava di basarsi sui piani.
         m[2 * Matrix4x4.size + 2] = (far - near) / 2;
         m[2 * Matrix4x4.size + 3] = (far + near) / 2;
         
@@ -335,7 +336,7 @@ public final class Matrix4x4
 
 
 
-        return new Triangle(v, w, b);
+        return new Triangle(new Vector4D[] {v, w, b}, t.getNormal(), t.getColor());
     }
 
     //************************** FINE METODI STATIC PER LA CREAZIONE DI MATRICI **************************  */

@@ -33,11 +33,11 @@ public final class Triangle
     }
 
 
-    public Triangle(final Vector4D a, final Vector4D b, final Vector4D c)
+    public Triangle(final Vector4D a, final Vector4D b, final Vector4D c, Color color)
     {
         t = new Vector4D[] {a, b, c};
         normal = Vector4D.crossProduct(Vector4D.sub(t[1], t[0]), Vector4D.sub(t[2], t[0]));
-        color = Color.BLUE;
+        this.color = color;
     }
 
 
@@ -48,7 +48,7 @@ public final class Triangle
         color = Color.BLUE;
     }
 
-    private Triangle(final Vector4D[] t, final Vector4D normal, final Color color)
+    public Triangle(final Vector4D[] t, final Vector4D normal, final Color color)
     {
         this.t = t;
         this.normal = normal;
@@ -150,6 +150,7 @@ public final class Triangle
     /******************************* SETUP GRAPHICS ****************************************** */
     public void setupAndDraw(Graphics g)
     {
+        //System.out.println(color);
         ((Graphics2D)g).setColor(color);
         ((Graphics2D)g).fillPolygon(getPolygon());
     }

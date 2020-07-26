@@ -8,6 +8,7 @@ import framework3d.geometry.Matrix4x4;
 import framework3d.geometry.PolygonMesh;
 import framework3d.geometry.Triangle;
 import framework3d.geometry.Vector4D;
+import framework3d.utility.camera.Camera;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -23,12 +24,14 @@ public class RenderingSystem implements ComponentSystem
 {
     private Engine engine;
     private int size;
-    private EntityRef camera;
+    private Camera camera;
 
     private ArrayList<MeshComponent> meshes;
 
     private Matrix4x4 projectionMatrix;
     private Matrix4x4 viewportMatrix;
+
+    private Shader shader;
 
 
     public RenderingSystem(Engine e)
@@ -44,12 +47,12 @@ public class RenderingSystem implements ComponentSystem
     }
 
 
-    public void setCamera(EntityRef camera)
+    public void setCamera(Camera camera)
     {
         this.camera = camera;
     }
 
-    public EntityRef getCamera()
+    public Camera getCamera()
     {
         return camera;
     }
@@ -69,11 +72,11 @@ public class RenderingSystem implements ComponentSystem
         // ArrayList<Triangle> buffer = fromObjectSpaceToWorldSpace(positions);
         // buffer = fromWorldSpaceToProjectionSpace(buffer);
         ArrayList<Triangle> out = new ArrayList<Triangle>(100);
-        PositionComponent cam = camera.getComponent(PositionComponent.class);
+        
         
         // cam.rotation = Matrix4x4.makeRotationX(0.785398f);
-        Matrix4x4 view = Matrix4x4.makeAffineTransformation(new Vector4D(1, 1, 1), cam.rotation, cam.position);
-        view = Matrix4x4.makeInverse(view);
+        Matrix4x4 view = camera.getViewMatrix();
+
 
         //Matrix4x4.printMatrix(view);
         for (int i = 0; i < positions.size(); ++i)
@@ -93,29 +96,72 @@ public class RenderingSystem implements ComponentSystem
 
             
             for (Triangle t : mesh)
-            {
+            {   
+                //******************* dall'object space al world space ******************************* */
+                
                 Triangle transformed = Matrix4x4.multiplyByTriangle(world, t);
-            
                 
-                //camera, ma ora sto simulando posizione 0, 0,0 quindi salto
+                /*************************************************************************************** */
                 
-                transformed = Matrix4x4.multiplyByTriangle(view, transformed);
+
+                /************************clipping space ******************************************* */
+
+
+                /********************************************************************************* */
 
                 transformed.calculateNormal();
                 transformed.getNormal().normalize();
+                
+                //transformed.getNormal().print();
 
-                Vector4D visible = Vector4D.sub(transformed.t[0], cam.position);
+                Vector4D visible = Vector4D.sub(transformed.t[0], camera.getCameraPosition());
 
                 if (Vector4D.dotProduct(transformed.getNormal(), visible) > 0)
                 {
+                    //*********************dal world space al camera space ******************************** */
+                
+                    transformed = Matrix4x4.multiplyByTriangle(view, transformed);
+
+                    /********************************************************************************** */
+
+                    /******************************** shader *********************************************** */
+                    
+                    shader.shader(transformed);
+                    
+
+                    /************************************************************************************** */
+
+                    /************************* projection space *************************************** */
                     transformed = Matrix4x4.multiplyByTriangle(projectionMatrix, transformed);
                     
                     transformed.normalizeByW();
 
+                    //NOTA IMPORTANTE 
+                    //x e y forse sono invertite, reinvertirle moltiplicando per -1.
+                    //farlo nella matrice viewport. check glViewport
+                    //System.out.println("RENDERING SYSTEM DOPO PROJECTION MATRIX, NOTA");
+
                     transformed.clearW();
+
+                    Vector4D p1 = transformed.getVertex(0);
+                    Vector4D p2 = transformed.getVertex(1);
+                    Vector4D p3 = transformed.getVertex(2);
+
+                    p1.setCoordinate(0, p1.getCoordinate(0) * -1);
+                    p1.setCoordinate(1, p1.getCoordinate(1) * -1);
+
+                    p2.setCoordinate(0, p2.getCoordinate(0) * -1);
+                    p2.setCoordinate(1, p2.getCoordinate(1) * -1);
+
+                    p3.setCoordinate(0, p3.getCoordinate(0) * -1);
+                    p3.setCoordinate(1, p3.getCoordinate(1) * -1);
+
+
 
                     transformed = Matrix4x4.multiplyByTriangle(viewportMatrix, transformed);
                     
+                    /********************************************************************************* */
+
                     buffer.add(transformed);
                 }
             }
@@ -123,13 +169,13 @@ public class RenderingSystem implements ComponentSystem
             out.addAll(buffer);
         }
 
-
+        //riordino i triangoli in base alla profondità.
         out.sort((Triangle t1, Triangle t2) -> 
 		{
 			float z1 = (t1.t[0].v[2] + t1.t[1].v[2] + t1.t[2].v[2]) / 3.0f;
 			float z2 = (t2.t[0].v[2] + t2.t[1].v[2] + t2.t[2].v[2]) / 3.0f;
             
-			return Float.compare(z1, z2);
+			return -Float.compare(z1, z2);
 		});
 
         for (Triangle t : out)
@@ -292,5 +338,11 @@ public class RenderingSystem implements ComponentSystem
         MeshComponent m = meshes.get(id);
 
         m.mesh = new PolygonMesh(meshName);
+    }
+
+
+    public void setShader(Shader s)
+    {
+        shader = s;
     }
 }

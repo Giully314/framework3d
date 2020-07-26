@@ -5,6 +5,7 @@ C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\Act
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\ForceAction.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\RotationXAction.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\RotationYAction.java
+C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\action\RotationZAction.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\component\AccelerationComponent.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\component\Component.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\component\ForceComponent.java
@@ -19,15 +20,19 @@ C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\system\Bas
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\system\ComponentSystem.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\system\InputSystem.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\system\RenderingSystem.java
+C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\system\Shader.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\ecs\system\TransformSystem.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\game\GameHandler.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\game\state\GameState.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\game\state\State.java
+C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\geometry\Intersection.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\geometry\Matrix4x4.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\geometry\PolygonMesh.java
+C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\geometry\Sphere.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\geometry\Triangle.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\geometry\Vector4D.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\utility\FrameRate.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\utility\KeyboardInput.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\utility\RawInputInterface.java
+C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\utility\camera\Camera.java
 C:\Users\Jest\Desktop\programmazione\Java\Framework3D\framework3d\window\WindowHandler.java

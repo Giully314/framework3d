@@ -8,17 +8,15 @@ public class PositionComponent extends Component
     public Vector4D position = new Vector4D();
     public Matrix4x4 rotation = Matrix4x4.makeIdentity();
 
+    //è bruttissima questa variabile così, ma mi serve per orientare la camera. Non ho trovato altre soluzioni.
+    public float angleY = 0.0f; //angolo in gradi.
+
+
     @Override
     public void printComponent()
     {
         System.out.println("PositionComponent");
         position.print();
         System.out.println("Da stampare la matrice");
-    }
-
-    @Override 
-    public void executeAction()
-    {
-        
     }
 }

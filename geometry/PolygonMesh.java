@@ -1,6 +1,7 @@
 package framework3d.geometry;
 
 import java.util.*;
+import java.awt.Color;
 import java.io.*;
 
 public final class PolygonMesh 
@@ -46,7 +47,8 @@ public final class PolygonMesh
 					Vector4D w = vertices.get(Integer.parseInt(lineSplitted[2]) - 1);
 					Vector4D e = vertices.get(Integer.parseInt(lineSplitted[3]) - 1);
 					
-					m.add(new Triangle(q, w, e));
+					//colore da passare a load mesh per impostarlo
+					m.add(new Triangle(q, w, e, Color.GRAY));
 				}
 				
 			}

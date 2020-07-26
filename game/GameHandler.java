@@ -20,6 +20,7 @@ import framework3d.ecs.system.*;
 import framework3d.geometry.*;
 import framework3d.utility.FrameRate;
 import framework3d.utility.KeyboardInput;
+import framework3d.utility.camera.Camera;
 
 public class GameHandler implements Runnable
 {
@@ -54,7 +55,7 @@ public class GameHandler implements Runnable
     /************ Entità ********* */
     
     private EntityRef ship;
-    private EntityRef camera;
+    private Camera camera;
     private EntityRef star;
     private float angle;
 
@@ -87,6 +88,9 @@ public class GameHandler implements Runnable
         WorldEngine engine = new WorldEngine();
         RenderingSystem r = engine.getSystem(RenderingSystem.class);
 
+        Vector4D light = new Vector4D(-10, 30, -30);
+        r.setShader(new Shader(light));
+
         engine.getSystem(InputSystem.class).registerRawInput(keyboard);
 
 
@@ -95,7 +99,13 @@ public class GameHandler implements Runnable
 
         angle = 0.0f;
 
-        //Setup input
+        ForceComponent shipForce = ship.getComponent(ForceComponent.class);
+        InputComponent shipInput = ship.getComponent(InputComponent.class);
+
+        PositionComponent shipPosition = ship.getComponent(PositionComponent.class);
+        MassComponent shipMass = ship.getComponent(MassComponent.class);
+
+        //*************************** Setup input *****************************
         String forward = new String("forward");
         String backwards = new String("backwards");
 
@@ -108,21 +118,16 @@ public class GameHandler implements Runnable
         String rollRight = new String("rollRight");
         String rollLeft = new String("rollLeft");
 
-        float step = 0.01f;
+        float step = 0.005f;
 
-
-        ForceComponent shipForce = ship.getComponent(ForceComponent.class);
-        InputComponent shipInput = ship.getComponent(InputComponent.class);
-
-        PositionComponent shipPosition = ship.getComponent(PositionComponent.class);
-        MassComponent shipMass = ship.getComponent(MassComponent.class);
-
+        Vector4D forceForward = new Vector4D(0, 0, -1);
+        Vector4D forceBackwards = new Vector4D(0, 0, 1);
         
         shipInput.input.put(KeyEvent.VK_W, forward);
-        shipInput.output.put(forward, new ForceAction(shipForce, new Vector4D(0, 0, -1)));
+        shipInput.output.put(forward, new ForceAction(shipForce, forceForward));
 
         shipInput.input.put(KeyEvent.VK_S, backwards);
-        shipInput.output.put(backwards, new ForceAction(shipForce, new Vector4D(0, 0, 1)));
+        shipInput.output.put(backwards, new ForceAction(shipForce, forceBackwards));
 
         shipInput.input.put(KeyEvent.VK_A, yawLeft);
         shipInput.output.put(yawLeft, new RotationYAction(shipPosition, step));
@@ -142,9 +147,10 @@ public class GameHandler implements Runnable
         shipInput.input.put(KeyEvent.VK_LEFT, rollLeft);
         shipInput.output.put(rollLeft, new RotationZAction(shipPosition, -step));
 
+        //********************************************************************************** */
 
         //setup dei componenti transform
-        shipPosition.position = new Vector4D(0.0f, 0.0f, -15.0f, 1.0f);
+        shipPosition.position = new Vector4D(0.0f, 30.0f, -15.0f, 1.0f);
 
         shipMass.mass = 50000;
 
@@ -156,20 +162,24 @@ public class GameHandler implements Runnable
         
 
         //Creazione stella
+        star = engine.entityCreate();
+
+        PositionComponent starPosition = star.getComponent(PositionComponent.class);
+        MassComponent starMass = star.getComponent(MassComponent.class);
+
+        starMass.mass = 1000000000;
+        starPosition.position.add(new Vector4D(0, 0, -30));
+
+        r.loadMesh(star, "C:\\Users\\Jest\\Desktop\\programmazione\\Java\\Framework3D\\resource\\sphere.obj");
         
+
+        engine.activateAllComponents(star);
 
         
         //Inizializzazione camera principale
-        camera = engine.entityCreate();
+        camera = new Camera(ship);
 
         //setup della camera (stesse caratteristiche della navicella? (componenti transform))
-
-
-        //Collegamento camera navicella attraverso input component.
-
-        camera.getComponent(PositionComponent.class).position = new Vector4D(0.0f, 0.0f, 0.0f, 1.0f);
-
-        //engine.activateAllComponents(camera);
 
         //Registrazione risorse sistemi. (camera, entità ecc)
         float near;
@@ -178,7 +188,6 @@ public class GameHandler implements Runnable
         near = far / 1000;
         r.createProjectionMatrix(near, far, width, height, 90.0f);
         r.setCamera(camera);
-        camera.getComponent(MeshComponent.class).deactivateComponent();
 
         //Setup del main State.
         gameStatus = new GameState(engine);
@@ -281,8 +290,10 @@ public class GameHandler implements Runnable
     {
         if (State.getState() != null)
         {
+            camera.moveCamera();
+            //camera.getCameraPosition().print();
             State.getState().updateLogicState(elapsedTime);
-            //State.getState().getEngine().getSystem(TransformSystem.class).printEntities();
+            State.getState().getEngine().getSystem(TransformSystem.class).printEntities();
         }
         
         
