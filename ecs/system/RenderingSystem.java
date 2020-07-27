@@ -79,11 +79,9 @@ public class RenderingSystem implements ComponentSystem
         ArrayList<Triangle> out = new ArrayList<Triangle>(100);
         
         
-        // cam.rotation = Matrix4x4.makeRotationX(0.785398f);
         Matrix4x4 view = camera.getViewMatrix();
 
 
-        //Matrix4x4.printMatrix(view);
         for (int i = 0; i < positions.size(); ++i)
         {
             PositionComponent p = positions.get(i);
@@ -117,7 +115,6 @@ public class RenderingSystem implements ComponentSystem
                 transformed.calculateNormal();
                 transformed.getNormal().normalize();
                 
-                //transformed.getNormal().print();
 
                 Vector4D visible = Vector4D.sub(transformed.t[0], camera.getCameraPosition());
 
@@ -142,7 +139,6 @@ public class RenderingSystem implements ComponentSystem
 
                     /*********************************** clipping ************************** */
 
-                    //int nClipped = 0;
                     Triangle[] clipped = new Triangle[2];
                     clipped[0] = new Triangle();
                     clipped[1] = new Triangle();
@@ -150,11 +146,10 @@ public class RenderingSystem implements ComponentSystem
                     clipped[0].setColor(transformed.getColor());
                     clipped[1].setColor(transformed.getColor());
 
-                    //il primo vettore deve avere componente near plane
+            
                     Triangle[] w = ClipAgainstPlane(new Vector4D(0, 0, -0.1f ), 
                     new Vector4D(0, 0, -1), transformed);
  
-                    //System.out.println("w: " + w.length);
 
                     /*********************************************************************** */
 
@@ -165,10 +160,6 @@ public class RenderingSystem implements ComponentSystem
                     
                         transformed.normalizeByW();
 
-                        //NOTA IMPORTANTE 
-                        //x e y forse sono invertite, reinvertirle moltiplicando per -1.
-                        //farlo nella matrice viewport. check glViewport
-                        //System.out.println("RENDERING SYSTEM DOPO PROJECTION MATRIX, NOTA");
 
                         transformed.clearW();
 
@@ -176,13 +167,13 @@ public class RenderingSystem implements ComponentSystem
                         Vector4D p2 = transformed.getVertex(1);
                         Vector4D p3 = transformed.getVertex(2);
 
-                        //p1.setCoordinate(0, p1.getCoordinate(0) * -1);
+                        
                         p1.setCoordinate(1, p1.getCoordinate(1) * -1);
 
-                        //p2.setCoordinate(0, p2.getCoordinate(0) * -1);
+                
                         p2.setCoordinate(1, p2.getCoordinate(1) * -1);
 
-                        //p3.setCoordinate(0, p3.getCoordinate(0) * -1);
+                        
                         p3.setCoordinate(1, p3.getCoordinate(1) * -1);
 
 
@@ -253,7 +244,6 @@ public class RenderingSystem implements ComponentSystem
 
         for (Triangle t : out)
         {
-            //t.print();
             t.setupAndDraw(g);
         }
     }

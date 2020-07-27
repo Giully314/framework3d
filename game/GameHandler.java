@@ -80,7 +80,6 @@ public class GameHandler implements Runnable
     private final Color[] PLANET_COLORS = new Color[] { Color.GRAY, Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, 
                                                             Color.ORANGE, Color.PINK, Color.YELLOW};
 
-
     private final int updateStars = 1000;
     private int counter = 1000;
 
@@ -200,7 +199,7 @@ public class GameHandler implements Runnable
         starMass.mass = STAR_MASS;
         starPosition.position.add(new Vector4D(0, 0, 0));
         
-        r.loadMesh(star, "framework3d\\resource\\sphere.obj", Color.BLUE);
+        r.loadMesh(star, "framework3d\\resource\\sphere.obj", Color.LIGHT_GRAY);
         star.getComponent(MeshComponent.class).scale.add(new Vector4D(20, 20, 20));
         
 

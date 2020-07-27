@@ -293,10 +293,10 @@ public class TransformSystem implements ComponentSystem
     {
         for (int i = 0; i < entityCollisions.size(); ++i)
         {
-            Sphere s = new Sphere(entityCollisions.get(i).getComponent(PositionComponent.class).position, 50);
+            Sphere s = new Sphere(entityCollisions.get(i).getComponent(PositionComponent.class).position, 40);
             for (int j = i + 1; j < entityCollisions.size(); ++j)
             {
-                Sphere w = new Sphere(entityCollisions.get(j).getComponent(PositionComponent.class).position, 50);
+                Sphere w = new Sphere(entityCollisions.get(j).getComponent(PositionComponent.class).position, 40);
 
                 if (Intersection.intersect(s, w))
                 {
